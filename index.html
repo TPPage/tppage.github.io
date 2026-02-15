@@ -1,74 +1,199 @@
-0﻿<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald&display=swap" rel="stylesheet">
-    <script data-goatcounter="https://tiagosprojectspage.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
-
-
-
     <meta charset="UTF-8">
-    <title>TIAGO'S PROJECTS PAGE</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPPage</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1 class="titolo">TIAGO'S PROJECTS PAGE</h1>
-    
-    <hr class="riga">
-    <h2 class="titolo">About Me</h2>
-    <div class="text-box">
-        <p>Hi! I'm a 14 years old Italian boy who wants publish his works.
-            I want to upload here the work I've done because maybe someone else may find it useful. 
-            I'm also a big fan of LEGO.
-            I also love Minecraft and Dirt Rally 2.0. Morover I like designing 3D models in SketchUp Make.
-            In this page you will find Google Drive links to download my works.
-            They are all copyright free, so you can download them for free and use them however you want.</p>
+
+    <div class="menu-trigger" onclick="toggleExplorer()">
+        <span></span>
+        <span></span>
+        <span></span>
+        <small>DIR</small>
     </div>
-    <hr class="riga">
 
-    <h2 class="titolo">Downloads</h2>
-    <div class="text-box">
+    <aside class="sidebar" id="explorer">
+        <div class="header">explorer.exe<span class="dot" onclick="toggleExplorer()"></span></div>
+        <div class="content_text">
+            <br>
+
+            <div><a href="#title" class="link">C:\TPPage></a></div>
+           
+            <div>
+                <span>├──</span>
+                <a href="#projects" class="link">projects.bat</a>
+            </div>
+            <div>
+                <span>├──</span>
+                <a href="#about" class="link">about_me.log</a>
+            </div>
+             <div>
+                <span>└──</span>
+                
+                <a href="#contact" class="link">contacts.txt</a>
+            </div>
+            <br>
+        </div>
+    </aside>
+
+    <pre class="ascii-title overflow" id="title">
+ _____ ____  ____                  
+|_   _|  _ \|  _ \ __ _  __ _  ___ 
+  | | | |_) | |_) / _` |/ _` |/ _ \
+  | | |  __/|  __/ (_| | (_| |  __/
+  |_| |_|   |_|   \__,_|\__, |\___|
+                        |___/      
+
+[Tiago's Projects Page]
+    </pre>
+    <br>
+
+    <p class="ascii-title" id="projects"><-Projects-></p>
+    <section class="grid">
+
+
+        <div class="window"> <!--project1-->
+            <div class="header">Header<span class="dot"></span></div>
+            <div class="content_title">Title</div>
+            <div class="content_text">Contents</div>
+            <a href="javascript:void(0)" class="button" onclick="openProject('project1-modal')">./view_more</a>
+        </div>
+
+        <div class="window"> <!--project1-->
+            <div class="header">Header<span class="dot"></span></div>
+            <div class="content_title">Title</div>
+            <div class="content_text">Contents</div>
+            <a href="javascript:void(0)" class="button" onclick="openProject('project2-modal')">./view_more</a>
+        </div>
+
+        <div class="window"> <!--project1-->
+            <div class="header">Header<span class="dot"></span></div>
+            <div class="content_title">Title</div>
+            <div class="content_text">Contents</div>
+            <a href="javascript:void(0)" class="button" onclick="openProject('project3-modal')">./view_more</a>
+        </div>
+
+        <div class="window"> <!--project1-->
+            <div class="header">Header<span class="dot"></span></div>
+            <div class="content_title">Title</div>
+            <div class="content_text">Contents</div>
+            <a href="javascript:void(0)" class="button" onclick="openProject('project4-modal')">./view_more</a>
+        </div>
+
+
+    </section>
+    <br>
+    <br>
+    <br>
+    <p class="ascii-title" id="about"><-About_me-></p>
+    <section class="about_me">
+        <p>C:\TPPage> about_me.log</p>
         <br>
-        <p>Minecraft (Worlds):</p>
-        <ul>
-            <li>Coming soon!</a></li>
-        </ul>
+        <p>[IDENTITY]</p>
+        <p>User: TGLabsOfficial</p>
+        <p>Profession: Student</p>
+        <p>Location: Italy</p>
+        <p>OS: Windows/Linux</p>
         <br>
-        <p>3D models (.stl):</p>
-        <ul>
-            <li>IBM 5150-style case that can contain modern hardware: 1 ATX (or M-ATX) mobo, 2 5,25" drives, 1 Flex-ATX PSU, 1 HDD 3,5". <a href="#" id="openModal" class="photo-link">View Photos </a></li>
-        <br>   
-        </ul>
-        <p>More coming soon!</p>
+        <p>[BIO]</p>
+        <p>I create scripts/apps/sites for fun and educational purposes, I love the golden age of computing.</p>
+        <br>
+        <p>[STATUS]</p>
+        <p>Uploading new projects<span class="dots"></span></p>
+        <p>Looking for collaborators: TRUE</p>
+    </section>
+
+    <p class="ascii-title margin-top" id="contact"><-Contacts-></p>
+    <section class="grid1">
+        <div class="window"> <!--project1-->
+            <div class="header">Contacts<span class="dot"></span></div>
+            <br>
+            <div class="content_text">Mail: <a href="mailto:tiagosprojectspage@gmail.com" class="link">tiagosprojectspage@gmail.com</a></div>
+            <br>
+            <br>
+            <a href="https://www.github.com/tppage/tppage.github.io" class="button">Source</a>
+            <a href="https://www.github.com/TGLabsOfficial" class="button">Github</a>
+            <a href="#" class="button">Instagam</a>
+            <br>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+
+
+
+
+    <div id="overlay" onclick="closeAllModals()"></div>
+    <!-- La Finestra Dettaglio -->
+    <div id="project1-modal" class="window modal-window">
+        <div class="header">Header<span class="dot" onclick="closeAllModals()"></span></div>
+        <div class="content_text">
+            <h2>[ PROGETTO: WinUtil ]</h2>
+            <p>> STATUS: OPERATIVO</p>
+            <p>> DESCRIZIONE: Script avanzato per il debloat di Windows 11...</p>
+            <br>
+           <p>Qui puoi mettere screenshot, link a GitHub o video.</p>
+        </div>
     </div>
-    <hr class="riga">
-    <h2 class="titolo">Contact Me</h2>
-    <p class="text-box">If you want to refer me some adjustaments I could make to this page or informations, don't hesitate to email me on <a href="mailto:tiagosprojectspage@gmail.com">tiagosprojectspage@gmail.com</a>. Please if you've liked this page send me an email!</p>
-    <hr class="riga">
-    <h2 class="titolo">Sponsors</h2>
-    <br>
-    <img src="images/foto.png" alt="Jean Nick TK" style="display: block; margin: 0 auto;" width="200">
-    <br>
-    <p class="text-box">IMPORTANT: this website is currently under development, and content may be updated regularly</p>
-    
+
+    <div id="overlay" onclick="closeAllModals()"></div>
+    <!-- La Finestra Dettaglio -->
+    <div id="project2-modal" class="window modal-window">
+        <div class="header">Header<span class="dot" onclick="closeAllModals()"></span></div>
+        <div class="content_text">
+            <h2>[ PROGETTO: WinUtil ]</h2>
+            <p>> STATUS: OPERATIVO</p>
+            <p>> DESCRIZIONE: Script avanzato per il debloat di Windows 11...</p>
+            <br>
+           <p>Qui puoi mettere screenshot, link a GitHub o video.</p>
+        </div>
+    </div>
+
+    <div id="overlay" onclick="closeAllModals()"></div>
+    <!-- La Finestra Dettaglio -->
+    <div id="project3-modal" class="window modal-window">
+        <div class="header">Header<span class="dot" onclick="closeAllModals()"></span></div>
+        <div class="content_text">
+            <h2>[ PROGETTO: WinUtil ]</h2>
+            <p>> STATUS: OPERATIVO</p>
+            <p>> DESCRIZIONE: Script avanzato per il debloat di Windows 11...</p>
+            <br>
+           <p>Qui puoi mettere screenshot, link a GitHub o video.</p>
+        </div>
+    </div>
+
+    <div id="overlay" onclick="closeAllModals()"></div>
+    <!-- La Finestra Dettaglio -->
+    <div id="project4-modal" class="window modal-window">
+        <div class="header">Header<span class="dot" onclick="closeAllModals()"></span></div>
+        <div class="content_text">
+            <h2>[ PROGETTO: WinUtil ]</h2>
+            <p>> STATUS: OPERATIVO</p>
+            <p>> DESCRIZIONE: Script avanzato per il debloat di Windows 11...</p>
+            <br>
+           <p>Qui puoi mettere screenshot, link a GitHub o video.</p>
+        </div>
+    </div>
+   
+
+    <p class="ascii-title"><-Comments-></p>
+    <section class="grid1">
+        <div class="window">
+            <div class="header">comments.log</div>
+            <br>
+            <div id="listaCommenti" class="content_text">
+                <p>Caricamento commenti<span class="dots"></span></p>
+            </div>
+            <div class="comments_log">
+                <input type="text" id="commento" class="input" placeholder="Write here">
+                <button onclick="sendToSheets()" class="button">./send</button>
+            </div>    
+        </div>
+    </section>
 
 
-
-
-    <script src="modal.js"></script>
-
-    
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
