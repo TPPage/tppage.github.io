@@ -66,6 +66,10 @@ body {
     font-family: 'Consolas', monospace;
 }
 
+.counter {
+    margin: 30px;
+}
+
 .ascii-title {
     text-align: center;
     font-family: 'Consolas', monospace;
