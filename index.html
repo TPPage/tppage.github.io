@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TPPage</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="menu-trigger" onclick="toggleExplorer()">
+        <span></span>
+        <span></span>
+        <span></span>
+        <small>DIR</small>
+    </div>
+
+    <aside class="sidebar" id="explorer">
+        <div class="header">explorer.exe<span class="dot" onclick="toggleExplorer()"></span></div>
+        <div class="content_text">
+            <br>
+
+            <div><a href="#title" class="link">C:\TPPage></a></div>
+           
+            <div>
+                <span>├──</span>
+                <a href="#projects" class="link">projects</a>
+            </div>
+            <div>
+                <span>├──</span>
+                <a href="#about" class="link">about_me.txt</a>
+            </div>
+            <div>
+                <span>├──</span>
+                <a href="#contact" class="link">contacts</a>
+            </div>
+             <div>
+                <span>└──</span>
+                <a href="#comments" class="link">comments.log</a>
+            </div>
+            <br>
+        </div>
+    </aside>
+
+    <pre class="ascii-title overflow" id="title">
+ _____ ____  ____                  
+|_   _|  _ \|  _ \ __ _  __ _  ___ 
+  | | | |_) | |_) / _` |/ _` |/ _ \
+  | | |  __/|  __/ (_| | (_| |  __/
+  |_| |_|   |_|   \__,_|\__, |\___|
+                        |___/      
+
+[Tiago's Projects Page]
+    </pre>
+    <br>
+
+    <p class="ascii-title" id="projects"><-Projects-></p>
+    <section class="grid">
+
+
+
+        <div class="window"> <!--project1-->
+            <div class="header">trioxide.exe<span class="dot"></span></div>
+            <div class="content_title">trioxide.exe</div>
+            <div class="content_text">fake win32 virus</div>
+            <a href="javascript:void(0)" class="button" onclick="openProject('project1-modal')">./view_more</a>
+        </div>
+
+        <div class="window"> <!--project1-->
+            <div class="header">italy.exe<span class="dot"></span></div>
+            <div class="content_title">italy.exe</div>
+            <div class="content_text">win32/dos program</div>
+            <a href="javascript:void(0)" class="button" onclick="openProject('project2-modal')">./view_more</a>
+        </div>
+
+        <div class="window"> <!--project1-->
+            <div class="header">ibm_pc_case<span class="dot"></span></div>
+            <div class="content_title">IBM PC case</div>
+            <div class="content_text">ATX case thath looks like an IBM PC</div>
+            <a href="javascript:void(0)" class="button" onclick="openProject('project3-modal')">./view_more</a>
+        </div>
+
+        <div class="window"> <!--project1-->
+            <div class="header">work_in_progress<span class="dot"></span></div>
+            <div class="content_title"></div>
+            <div class="content_text">tiago@tppage:/$ echo Work in progress...</div>
+            <div class="content_text">Work in progress...</div>
+            <a href="javascript:void(0)" class="button" onclick="openProject('project4-modal')">./view_more</a>
+        </div>
+
+
+
+
+    </section>
+    <br>
+    <br>
+    <br>
+    <p class="ascii-title" id="about"><-About_me-></p>
+    <section class="about_me">
+        <p>C:\TPPage> about_me.txt</p>
+        <br>
+        <p>[IDENTITY]</p>
+        <p>User: TGLabsOfficial [Tiago]</p>
+        <p>Profession: Student</p>
+        <p>Location: Italy</p>
+        <p>OS: Windows/Linux</p>
+        <br>
+        <p>[BIO]</p>
+        <p>I create scripts/apps/sites for fun and educational purposes, I love the golden age of computing.</p>
+        <br>
+        <p>[STATUS]</p>
+        <p>Uploading new projects<span class="dots"></span></p>
+        <p>Looking for collaborators: TRUE</p>
+    </section>
+
+    <p class="ascii-title margin-top" id="contact"><-Contacts-></p>
+    <section class="grid1">
+        <div class="window"> <!--project1-->
+            <div class="header">Contacts<span class="dot"></span></div>
+            <br>
+            <div class="content_text">Mail: <a href="mailto:tiagosprojectspage@gmail.com" class="link">tiagosprojectspage@gmail.com</a></div>
+            <br>
+            <br>
+            <a href="https://www.github.com/tppage/tppage.github.io" class="button">Source_code</a>
+            <a href="https://www.github.com/TGLabsOfficial" class="button">Github</a>
+            <a href="https://www.instagram.com/tiago_kronyte_?utm_source=qr" class="button">Instagam</a>
+            <br>
+        </div>
+    </section>
+
+
+
+
+
+
+
+    <div id="overlay" onclick="closeAllModals()"></div>
+    <!-- La Finestra Dettaglio -->
+    <div id="project1-modal" class="window modal-window">
+        <div class="header">trioxide.exe<span class="dot" onclick="closeAllModals()"></span></div>
+        <div class="content_text">
+            <h2>[ PROJECT: trioxide.exe ]</h2>
+            <p>> DESCRIPTION: fake win32 virus
+            <p>> OPERATION: it creates a screenshot, it applies some OpenGL shaders</p>
+            <p>> PREPARATION: extract the .zip and run the .exe</p>
+            <p>> DOWNLOAD: <a href="projects/trioxide/trioxide.zip" download class="link">trioxide.zip</a></p>
+        </div>
+    </div>
+
+    <div id="overlay" onclick="closeAllModals()"></div>
+    <!-- La Finestra Dettaglio -->
+    <div id="project2-modal" class="window modal-window">
+        <div class="header">Header<span class="dot" onclick="closeAllModals()"></span></div>
+        <div class="content_text">
+            <h2>[ PROJECT: italy.exe ]</h2>
+            <p>> STATUS: Out of maintenance</p>
+            <p>> DESCRIPTION: win32/dos program that creates an ASCII art of Italy</p>
+            <p>> DOWNLOAD: <a href="projects/italy/italyWin32.exe" download class="link">win32italy.exe</a> | <a href="projects/italy/italyWin32.cpp" download class="link">Win32Source(C++)</a> | <a href="projects/italy/italyDos16.exe" download class="link">italyDos16.exe</a> | <a href="projects/italy/italyDos16.cpp" download class="link">DosSource(C++)</a></p>
+        </div>
+    </div>
+
+    <div id="overlay" onclick="closeAllModals()"></div>
+    <!-- La Finestra Dettaglio -->
+    <div id="project3-modal" class="window modal-window">
+        <div class="header">ibm_pc_case<span class="dot" onclick="closeAllModals()"></span></div>
+        <div class="content_text">
+            <h2>[ PROJECTS: IBM PC case ]</h2>
+            <p>> STATUS: Finished</p>
+            <p>> DESCRIPTION: ATX case that looks like an IBM PC</p>
+            <p>> DOWNLOAD: <a href="projects/ibmpc/ibm_pc.stl" download class="link">ibm_pc.stl</a></p>
+            <br>
+            <img src="projects/ibmpc/foto1.webp" alt="front" class="images">
+            <img src="projects/ibmpc/foto2.webp" alt="front-left" class="images">
+            <img src="projects/ibmpc/foto3.webp" alt="back" class="images">
+            <img src="projects/ibmpc/foto4.webp" alt="top" class="images">
+            <img src="projects/ibmpc/foto5.webp" alt="inside" class="images">
+            <img src="projects/ibmpc/foto6.webp" alt="inside"class="images">
+        </div>
+    </div>
+
+    <div id="overlay" onclick="closeAllModals()"></div>
+    <!-- La Finestra Dettaglio -->
+    <div id="project4-modal" class="window modal-window">
+        <div class="header">work_in_progress<span class="dot" onclick="closeAllModals()"></span></div>
+        <div class="content_text">
+            <h2>[ PROJECT: Unknown ]</h2>
+            <p>> STATUS: Work in progress<span class="dots"></span></p>
+            <p>> DESCRIPTION: Unknown</p>
+        </div>
+    </div>
+   
+
+
+
+
+
+
+
+
+
+
+    <p class="ascii-title" id="comments"><-Comments-></p>
+    <section class="grid1">
+        <div class="window">
+            <div class="header">comments.log<span class="dot"></span></div>
+            <br>
+            <div id="listaCommenti" class="content_text">
+                <p>Loading comments<span class="dots"></span></p>
+            </div>
+            <div class="comments_log">
+                <span id="display-guest-name" class="terminal-user">guest@tppage:~$</span>
+                <input type="text" id="commento" class="input" placeholder="write here">
+                <button onclick="sendToSheets()" class="button">./send</button>
+            </div>    
+        </div>
+    </section>
+
+
+    <div class="grid1">
+        <div class="window">
+            <div class="header">visitor_count.txt<span class="dot"></span></div>
+            <div class="counter">Visitor_count: <span id="view-count">Loading<span class="dots"></span></span></div>
+        </div>
+    </div> 
+
+
+    <script src="script.js"></script>
+
+
+</body>
+</html>
