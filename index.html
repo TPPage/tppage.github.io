@@ -8,9 +8,6 @@
 </head>
 <body>
 
-    <img src="https://hitscounter.dev/api/hit?url=tppage.github.io&label=Visitors&icon=align-center&color=%23fff&message=&style=for-the-badge&tz=localtime" class="counter">
-
-
     <div class="menu-trigger" onclick="toggleExplorer()">
         <span></span>
         <span></span>
@@ -27,15 +24,19 @@
            
             <div>
                 <span>├──</span>
-                <a href="#projects" class="link">projects.bat</a>
+                <a href="#projects" class="link">projects</a>
             </div>
             <div>
                 <span>├──</span>
-                <a href="#about" class="link">about_me.log</a>
+                <a href="#about" class="link">about_me.txt</a>
+            </div>
+            <div>
+                <span>├──</span>
+                <a href="#contact" class="link">contacts</a>
             </div>
              <div>
                 <span>└──</span>
-                <a href="#contact" class="link">contacts.txt</a>
+                <a href="#comments" class="link">comments.log</a>
             </div>
             <br>
         </div>
@@ -57,33 +58,37 @@
     <section class="grid">
 
 
+
         <div class="window"> <!--project1-->
-            <div class="header">Header<span class="dot"></span></div>
-            <div class="content_title">Title</div>
-            <div class="content_text">Contents</div>
+            <div class="header">trioxide.exe<span class="dot"></span></div>
+            <div class="content_title">trioxide.exe</div>
+            <div class="content_text">fake win32 virus</div>
             <a href="javascript:void(0)" class="button" onclick="openProject('project1-modal')">./view_more</a>
         </div>
 
         <div class="window"> <!--project1-->
-            <div class="header">Header<span class="dot"></span></div>
-            <div class="content_title">Title</div>
-            <div class="content_text">Contents</div>
+            <div class="header">italy.exe<span class="dot"></span></div>
+            <div class="content_title">italy.exe</div>
+            <div class="content_text">win32/dos program</div>
             <a href="javascript:void(0)" class="button" onclick="openProject('project2-modal')">./view_more</a>
         </div>
 
         <div class="window"> <!--project1-->
-            <div class="header">Header<span class="dot"></span></div>
-            <div class="content_title">Title</div>
-            <div class="content_text">Contents</div>
+            <div class="header">ibm_pc_case<span class="dot"></span></div>
+            <div class="content_title">IBM PC case</div>
+            <div class="content_text">ATX case thath looks like an IBM PC</div>
             <a href="javascript:void(0)" class="button" onclick="openProject('project3-modal')">./view_more</a>
         </div>
 
         <div class="window"> <!--project1-->
-            <div class="header">Header<span class="dot"></span></div>
-            <div class="content_title">Title</div>
-            <div class="content_text">Contents</div>
+            <div class="header">work_in_progress<span class="dot"></span></div>
+            <div class="content_title"></div>
+            <div class="content_text">tiago@tppage:/$ echo Work in progress...</div>
+            <div class="content_text">Work in progress...</div>
             <a href="javascript:void(0)" class="button" onclick="openProject('project4-modal')">./view_more</a>
         </div>
+
+
 
 
     </section>
@@ -92,10 +97,10 @@
     <br>
     <p class="ascii-title" id="about"><-About_me-></p>
     <section class="about_me">
-        <p>C:\TPPage> about_me.log</p>
+        <p>C:\TPPage> about_me.txt</p>
         <br>
         <p>[IDENTITY]</p>
-        <p>User: TGLabsOfficial</p>
+        <p>User: TGLabsOfficial [Tiago]</p>
         <p>Profession: Student</p>
         <p>Location: Italy</p>
         <p>OS: Windows/Linux</p>
@@ -116,14 +121,15 @@
             <div class="content_text">Mail: <a href="mailto:tiagosprojectspage@gmail.com" class="link">tiagosprojectspage@gmail.com</a></div>
             <br>
             <br>
-            <a href="https://www.github.com/tppage/tppage.github.io" class="button">Source</a>
+            <a href="https://www.github.com/tppage/tppage.github.io" class="button">Source_code</a>
             <a href="https://www.github.com/TGLabsOfficial" class="button">Github</a>
-            <a href="#" class="button">Instagam</a>
+            <a href="https://www.instagram.com/tiago_kronyte_?utm_source=qr" class="button">Instagam</a>
             <br>
         </div>
     </section>
 
-    <script src="script.js"></script>
+
+
 
 
 
@@ -131,13 +137,13 @@
     <div id="overlay" onclick="closeAllModals()"></div>
     <!-- La Finestra Dettaglio -->
     <div id="project1-modal" class="window modal-window">
-        <div class="header">Header<span class="dot" onclick="closeAllModals()"></span></div>
+        <div class="header">trioxide.exe<span class="dot" onclick="closeAllModals()"></span></div>
         <div class="content_text">
-            <h2>[ PROGETTO: WinUtil ]</h2>
-            <p>> STATUS: OPERATIVO</p>
-            <p>> DESCRIZIONE: Script avanzato per il debloat di Windows 11...</p>
-            <br>
-           <p>Qui puoi mettere screenshot, link a GitHub o video.</p>
+            <h2>[ PROJECT: trioxide.exe ]</h2>
+            <p>> DESCRIPTION: fake win32 virus
+            <p>> OPERATION: it creates a screenshot, it applies some OpenGL shaders</p>
+            <p>> PREPARATION: extract the .zip and run the .exe</p>
+            <p>> DOWNLOAD: <a href="projects/trioxide/trioxide.zip" download class="link">trioxide.zip</a></p>
         </div>
     </div>
 
@@ -146,58 +152,80 @@
     <div id="project2-modal" class="window modal-window">
         <div class="header">Header<span class="dot" onclick="closeAllModals()"></span></div>
         <div class="content_text">
-            <h2>[ PROGETTO: WinUtil ]</h2>
-            <p>> STATUS: OPERATIVO</p>
-            <p>> DESCRIZIONE: Script avanzato per il debloat di Windows 11...</p>
-            <br>
-           <p>Qui puoi mettere screenshot, link a GitHub o video.</p>
+            <h2>[ PROJECT: italy.exe ]</h2>
+            <p>> STATUS: Out of maintenance</p>
+            <p>> DESCRIPTION: win32/dos program that creates an ASCII art of Italy</p>
+            <p>> DOWNLOAD: <a href="projects/italy/italyWin32.exe" download class="link">win32italy.exe</a> | <a href="projects/italy/italyWin32.cpp" download class="link">Win32Source(C++)</a> | <a href="projects/italy/italyDos16.exe" download class="link">italyDos16.exe</a> | <a href="projects/italy/italyDos16.cpp" download class="link">DosSource(C++)</a></p>
         </div>
     </div>
 
     <div id="overlay" onclick="closeAllModals()"></div>
     <!-- La Finestra Dettaglio -->
     <div id="project3-modal" class="window modal-window">
-        <div class="header">Header<span class="dot" onclick="closeAllModals()"></span></div>
+        <div class="header">ibm_pc_case<span class="dot" onclick="closeAllModals()"></span></div>
         <div class="content_text">
-            <h2>[ PROGETTO: WinUtil ]</h2>
-            <p>> STATUS: OPERATIVO</p>
-            <p>> DESCRIZIONE: Script avanzato per il debloat di Windows 11...</p>
+            <h2>[ PROJECTS: IBM PC case ]</h2>
+            <p>> STATUS: Finished</p>
+            <p>> DESCRIPTION: ATX case that looks like an IBM PC</p>
+            <p>> DOWNLOAD: <a href="projects/ibmpc/ibm_pc.stl" download class="link">ibm_pc.stl</a></p>
             <br>
-           <p>Qui puoi mettere screenshot, link a GitHub o video.</p>
+            <img src="projects/ibmpc/foto1.webp" alt="front" class="images">
+            <img src="projects/ibmpc/foto2.webp" alt="front-left" class="images">
+            <img src="projects/ibmpc/foto3.webp" alt="back" class="images">
+            <img src="projects/ibmpc/foto4.webp" alt="top" class="images">
+            <img src="projects/ibmpc/foto5.webp" alt="inside" class="images">
+            <img src="projects/ibmpc/foto6.webp" alt="inside"class="images">
         </div>
     </div>
 
     <div id="overlay" onclick="closeAllModals()"></div>
     <!-- La Finestra Dettaglio -->
     <div id="project4-modal" class="window modal-window">
-        <div class="header">Header<span class="dot" onclick="closeAllModals()"></span></div>
+        <div class="header">work_in_progress<span class="dot" onclick="closeAllModals()"></span></div>
         <div class="content_text">
-            <h2>[ PROGETTO: WinUtil ]</h2>
-            <p>> STATUS: OPERATIVO</p>
-            <p>> DESCRIZIONE: Script avanzato per il debloat di Windows 11...</p>
-            <br>
-           <p>Qui puoi mettere screenshot, link a GitHub o video.</p>
+            <h2>[ PROJECT: Unknown ]</h2>
+            <p>> STATUS: Work in progress<span class="dots"></span></p>
+            <p>> DESCRIPTION: Unknown</p>
         </div>
     </div>
    
 
-    <p class="ascii-title"><-Comments-></p>
+
+
+
+
+
+
+
+
+
+    <p class="ascii-title" id="comments"><-Comments-></p>
     <section class="grid1">
         <div class="window">
-            <div class="header">comments.log</div>
+            <div class="header">comments.log<span class="dot"></span></div>
             <br>
             <div id="listaCommenti" class="content_text">
-                <p>Caricamento commenti<span class="dots"></span></p>
+                <p>Loading comments<span class="dots"></span></p>
             </div>
             <div class="comments_log">
-                <input type="text" id="commento" class="input" placeholder="Write here">
+                <span id="display-guest-name" class="terminal-user">guest@tppage:~$</span>
+                <input type="text" id="commento" class="input" placeholder="write here">
                 <button onclick="sendToSheets()" class="button">./send</button>
             </div>    
         </div>
     </section>
 
 
+    <div class="grid1">
+        <div class="window">
+            <div class="header">visitor_count.txt<span class="dot"></span></div>
+            <div class="counter">Visitor_count: <span id="view-count">Loading<span class="dots"></span></span></div>
+        </div>
+    </div> 
+
+
+    <script src="script.js"></script>
+
+
 </body>
 </html>
-
-

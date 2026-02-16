@@ -1,70 +1,60 @@
+// 1. GENERAZIONE IDENTITÀ CASUALE
+const randomId = Math.floor(Math.random() * 899 + 100);
+const guestName = `guest_${randomId}`;
 
-
+// 2. GESTIONE FINESTRE E SIDEBAR
 function toggleExplorer() {
-    // Seleziona la finestra tramite il suo ID
     const win = document.getElementById('explorer');
-    
-    // Aggiunge o toglie la classe 'active'
     win.classList.toggle('active');
 }
 
-// Opzionale: chiudi con il tasto ESC
 document.addEventListener('keydown', (e) => {
     if (e.key === "Escape") {
-        document.getElementById('explorer').classList.remove('active');
+        const explorer = document.getElementById('explorer');
+        if(explorer) explorer.classList.remove('active');
+        closeAllModals();
     }
 });
+
 document.addEventListener('click', function(event) {
     const sidebar = document.querySelector('.sidebar');
     const btn = document.querySelector('.menu-trigger');
-
-    // Se la sidebar è aperta (ha la classe active)...
-    if (sidebar.classList.contains('active')) {
-        
-        /* ...e se il click NON è avvenuto dentro la sidebar 
-           e NON è avvenuto sul pulsante del menu... */
+    if (sidebar && sidebar.classList.contains('active')) {
         if (!sidebar.contains(event.target) && !btn.contains(event.target)) {
-            
-            // ...allora togli la classe active
             sidebar.classList.remove('active');
             console.log("Explorer: CLOSED_BY_EXTERNAL_CLICK");
         }
     }
 });
 
-
+// 3. GESTIONE MODALI
 function openProject(modalId) {
     document.getElementById('overlay').classList.add('modal-active');
     document.getElementById(modalId).classList.add('modal-active');
 }
 
 function closeAllModals() {
-    document.getElementById('overlay').classList.remove('modal-active');
-    // Cerca tutte le finestre modali e le chiude
+    const overlay = document.getElementById('overlay');
+    if(overlay) overlay.classList.remove('modal-active');
     const modals = document.querySelectorAll('.modal-window');
     modals.forEach(m => m.classList.remove('modal-active'));
 }
 
-
-document.addEventListener('keydown', function(event) {
-    if (event.key === "Escape") {
-        closeAllModals();
-        // Se vuoi chiudere anche la sidebar:
-        const sidebar = document.querySelector('.sidebar');
-        if(sidebar) sidebar.classList.remove('active');
-    }
-});
-
-
+// 4. INVIO DATI A GOOGLE SHEETS
 function sendToSheets() {
-    const url = "https://script.google.com/macros/s/AKfycbw81UUis3dhRRJgBXiYraFRDx9TqbjmkJY1h0opabg0RnbS_tOyQ0f6I9iGozfCCn26/exec";
-    const testo = document.getElementById('commento').value;
+    const url = "https://script.google.com/macros/s/AKfycbzAr3vWOsFtXcAjdicrC3x2TttgHEqYxAq8R730g2wuOpmBd7D7rFWv4i78c8z6L5SO/exec"; // <--- METTI IL TUO URL /exec
+    const input = document.getElementById('commento');
+    const testo_da_inviare = input.value;
   
-    // Se il campo è vuoto, esce dalla funzione senza fare nulla
-    if(!testo) return;
+    if(!testo_da_inviare) return;
   
     const formData = new FormData();
-    formData.append("testo", testo);
+    
+    // CONTROLLA BENE QUI:
+    // "testo" deve contenere il messaggio (finirà in Colonna C)
+    // "autore" deve contenere il guestName (finirà in Colonna B)
+    formData.append("testo", testo_da_inviare); 
+    formData.append("autore", guestName); 
   
     fetch(url, {
       method: "POST",
@@ -72,45 +62,122 @@ function sendToSheets() {
       body: formData
     })
     .then(() => {
-      // Pulisce il campo di testo in silenzio
-      document.getElementById('commento').value = "";
-      console.log("Inviato con successo!"); 
+      input.value = "";
+      console.log("Inviato: " + testo_da_inviare + " come " + guestName);
+      caricaCommenti(); 
     })
-    .catch(err => {
-      // Registra l'errore solo in console per i tuoi test
-      console.error("Errore nell'invio:", err);
-    });
-  }
-  
-  async function caricaCommenti() {
-    const url = "https://script.google.com/macros/s/AKfycbw81UUis3dhRRJgBXiYraFRDx9TqbjmkJY1h0opabg0RnbS_tOyQ0f6I9iGozfCCn26/exec";
+    .catch(err => console.error("Errore invio:", err));
+}
+
+
+// 5. CARICAMENTO COMMENTI (STILE TERMINALE)
+async function caricaCommenti() {
+    const url = "https://script.google.com/macros/s/AKfycbzAr3vWOsFtXcAjdicrC3x2TttgHEqYxAq8R730g2wuOpmBd7D7rFWv4i78c8z6L5SO/exec";
     
     try {
       const response = await fetch(url);
       const righe = await response.json();
       const contenitore = document.getElementById('listaCommenti');
-      contenitore.innerHTML = ""; // Pulisce il caricamento
+      if(!contenitore) return;
+      
+      contenitore.innerHTML = ""; 
   
-      // Mostra i commenti dal più recente al più vecchio
       righe.reverse().forEach(riga => {
         const dataISO = riga[0];
-        const testo = riga[1];
+        const autore = riga[1] || "anon";
+        const testo = riga[2];
         
-        // Abbrevia la data (es: 15/02, 17:30)
+        if(!testo) return;
+
+        // MODIFICA QUI: Aggiunto day e month
         const dataAbbreviata = new Date(dataISO).toLocaleString('it-IT', {
-          day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+          day: '2-digit', 
+          month: '2-digit',
+          hour: '2-digit', 
+          minute: '2-digit'
         });
   
         const div = document.createElement('div');
-        div.innerHTML = `<small style="color: #333;">${dataAbbreviata}</small> <br> <p>${testo}</p> <hr style="border: 1px solid;">`;
+        div.className = 'comment-item';
+        
+        // Risultato: [16/02, 14:30] guest_123: Messaggio
+        div.innerHTML = `<span style="color: #666;">[${dataAbbreviata}]</span> <span style="color: #16c60c;">${autore}@tppage:</span> <span style="color: #D3D7CF;">${testo}</span>`;
         contenitore.appendChild(div);
       });
     } catch (e) {
       console.error("Errore caricamento:", e);
     }
-  }
-  
-  // Carica i commenti appena apri la pagina
-  caricaCommenti();
-  // Controlla nuovi commenti ogni 30 secondi
-    setInterval(caricaCommenti, 30000); 
+}
+
+
+// 6. INIZIALIZZAZIONE AL CARICAMENTO
+window.addEventListener('load', () => {
+    console.log("Script.js caricato correttamente!");
+    
+    // Imposta il prompt del terminale col nome casuale
+    const promptDisplay = document.getElementById('display-guest-name');
+    if (promptDisplay) {
+        promptDisplay.innerText = `${guestName}@tppage:~$`;
+    }
+
+    // Carica commenti e attiva loop 30s
+    caricaCommenti();
+    setInterval(caricaCommenti, 30000);
+
+    // Permetti invio con tasto INVIO
+    const inputField = document.getElementById('commento');
+    if(inputField) {
+        inputField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendToSheets();
+        });
+    }
+
+    // --- CONTATORE VISITE ---
+  async function updateViewCounter() {
+    const proxy = "https://corsproxy.io/?";
+    const baseUrl = "https://api.counterapi.dev/v2/tiagos-team-1-2933/vistor-count";
+    const sessionActive = sessionStorage.getItem('visited_tppage');
+    
+    // Creiamo il timestamp per la cache
+    const ts = new Date().getTime();
+    
+    // Costruiamo l'URL corretto per l'API v2
+    // Se non ha visitato: .../vistor-count/up?t=123
+    // Se ha già visitato: .../vistor-count?t=123
+    let apiUrl = baseUrl + (sessionActive ? "" : "/up") + "?t=" + ts;
+
+    // Ora passiamo tutto l'URL pulito al proxy
+    const finalUrl = proxy + encodeURIComponent(apiUrl);
+
+    try {
+        const response = await fetch(finalUrl);
+        const json = await response.json();
+        
+        const countValue = json.data ? json.data.up_count : undefined;
+        const element = document.getElementById('view-count');
+
+        if (element && countValue !== undefined) {
+            element.innerText = countValue;
+            console.log("Real-time sync:", countValue);
+        }
+
+        if (!sessionActive && countValue !== undefined) {
+            sessionStorage.setItem('visited_tppage', 'true');
+        }
+    } catch (error) {
+        console.error("Sync error:", error);
+    }
+}
+
+
+
+    setTimeout(() => {
+        updateViewCounter();
+        setInterval(updateViewCounter, 30000);
+    }, 3000);
+});
+
+
+
+
+
