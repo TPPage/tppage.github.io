@@ -1,8 +1,28 @@
+/**
+ * ==============================================================================
+ * TPPage Stylesheet - Windows 95 Theme & Layouts
+ * ==============================================================================
+ */
+
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
 
 /* ==========================================
-   RESET E REGOLE GLOBALI BOX-SIZING
+   1. GLOBAL VARIABLES & RESET
    ========================================== */
+:root {
+    /* Windows 95 System Color Palette */
+    --win-bg: #C0C0C0;
+    --win-border-light: #FFFFFF;
+    --win-border-dark: #000000;
+    --win-border-shadow: #DFDFDF;
+    --win-blue: #000080;
+    --win-blue-light: #1084D7;
+    
+    /* Typography */
+    --font-sans: 'MS Sans Serif', 'MS Shell Dlg', Arial, sans-serif;
+    --font-mono: 'VT323', monospace;
+}
+
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -13,89 +33,59 @@ html {
 
 body {
     background-color: #018184;
-    background-image: 
-        repeating-linear-gradient(
-            0deg,
-            rgba(0, 0, 0, 0.15) 0px,
-            rgba(0, 0, 0, 0.15) 1px,
-            transparent 1px,
-            transparent 2px
-        );
-    font-family: 'MS Sans Serif', 'MS Shell Dlg', Arial, sans-serif;
+    background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
+    font-family: var(--font-sans);
     margin: 0;
-    padding: 0 0 50px 0; /* Spazio per evitare che la taskbar copra i contenuti in fondo */
+    padding: 0 0 50px 0;
 }
 
-/* EFFETTO SCANLINE CRT SULLO SFONDO */
+/* Retro CRT monitor overlay effect */
 body::before {
     content: '';
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: 
-        repeating-linear-gradient(
-            0deg,
-            rgba(0, 0, 0, 0.03) 0px,
-            rgba(0, 0, 0, 0.03) 1px,
-            transparent 1px,
-            transparent 2px
-        );
+    inset: 0;
+    background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.03) 0px, rgba(0, 0, 0, 0.03) 1px, transparent 1px, transparent 2px);
     pointer-events: none;
     z-index: 9999;
 }
 
 /* ==========================================
-   START MENU (WIN95)
+   2. START MENU & EXPLORER SIDEBAR
    ========================================== */
 .start-menu {
     display: none;
     position: fixed;
-    bottom: 40px; /* Posizionato esattamente sopra la taskbar da 40px */
+    bottom: 40px;
     left: 0;
     width: 220px;
-    background: #C0C0C0;
-    border-top: 2px solid #FFFFFF;
-    border-left: 2px solid #FFFFFF;
-    border-right: 2px solid #000000;
-    border-bottom: 2px solid #000000;
+    background: var(--win-bg);
+    border: 2px solid;
+    border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
     box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
     z-index: 3001;
     padding: 1px;
 }
 
-.start-menu.active,
-.start-menu.modal-active {
+.start-menu.active {
     display: flex !important;
-    flex-direction: row !important;
 }
 
-/* BANNER BLU LATERALE NEL MENU START */
 .start-menu .sidebar-menu {
     width: 28px;
-    background: linear-gradient(to top, #000080, #1084D7);
+    background: linear-gradient(to top, var(--win-blue), var(--win-blue-light));
     display: flex;
     align-items: flex-end;
     justify-content: center;
     padding-bottom: 8px;
-    flex-shrink: 0;
-    margin: 0;
 }
 
 .win-banner-text {
-    color: #FFFFFF;
+    color: var(--win-border-light);
     writing-mode: vertical-rl;
     transform: rotate(180deg);
-    font-family: 'MS Sans Serif', Arial, sans-serif;
     font-size: 14px;
     letter-spacing: 1px;
     user-select: none;
-}
-
-.win-banner-text b {
-    font-weight: bold;
-    margin-bottom: 3px;
 }
 
 .start-menu .content {
@@ -111,271 +101,186 @@ body::before {
     gap: 8px;
     padding: 4px 6px;
     text-decoration: none;
-    color: #000000;
-    font-family: 'MS Sans Serif', Arial, sans-serif;
+    color: var(--win-border-dark);
     font-size: 12px;
 }
 
 .start-menu .content a:hover {
-    background: #000080;
-    color: #FFFFFF;
+    background: var(--win-blue);
+    color: var(--win-border-light);
 }
 
-.menu-icon {
+.menu-icon, .start-btn-icon, .tb-icon {
     width: 28px;
     height: 28px;
     object-fit: contain;
     image-rendering: pixelated;
-    flex-shrink: 0;
 }
 
 .start-menu hr {
     border: none;
     border-top: 1px solid #808080;
-    border-bottom: 1px solid #FFFFFF;
+    border-bottom: 1px solid var(--win-border-light);
     margin: 3px 1px;
 }
 
-/* ==========================================
-   SIDEBAR EXPLORER
-   ========================================== */
 .sidebar {
-    font-family: 'MS Sans Serif', monospace;
+    font-family: var(--font-sans);
     font-size: 11px;
     position: fixed;
     left: 20px;
     bottom: 50px;
     width: 280px;
     min-height: 300px;
-    background-color: #C0C0C0;
-    border: 2px outset #DFDFDF;
-    border-right-color: #000000;
-    border-bottom-color: #000000;
+    background-color: var(--win-bg);
+    border: 2px outset var(--win-border-shadow);
+    border-right-color: var(--win-border-dark);
+    border-bottom-color: var(--win-border-dark);
     z-index: 2000;
-    overflow: hidden;
     transform: translateX(-350px);
     transition: transform 0.3s ease-in-out;
-    box-shadow: 1px 1px 0 #FFFFFF inset, -1px -1px 0 #000000 inset;
 }
 
 .sidebar.active {
     transform: translateX(0);
 }
 
-.sidebar .header {
-    background: linear-gradient(to right, #000080 0%, #1084D7 100%);
-    padding: 2px 4px;
-    border-bottom: 2px outset #DFDFDF;
-    border-right-color: #000000;
-    color: #FFFFFF;
-    font-size: 11px;
-    font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.link {
-    text-decoration: underline;
-    color: #000080;
-    font-family: 'MS Sans Serif', monospace;
-    transition: all 0.2s ease;
-    cursor: pointer;
-}
-
-.link:hover,
-.link:focus {
-    color: #0000FF;
-    background-color: #FFFFFF;
-    outline: 1px dashed #000080;
-}
-
 /* ==========================================
-   TITOLI RETRO
+   3. TITLES & GRID LAYOUTS
    ========================================== */
 .ascii-title {
     text-align: center;
     font-family: 'Press Start 2P', monospace;
     font-size: 72px;
-    line-height: 1.2;
-    font-weight: normal;
-    letter-spacing: -1px;
-    color: #FFFFFF;
-    text-shadow: 
-        4px 4px 0px #333333,
-        8px 8px 0px #1a1a1a;
-    padding-top: 20px;
-    padding-bottom: 30px;
+    color: var(--win-border-light);
+    text-shadow: 4px 4px 0px #333333, 8px 8px 0px #1a1a1a;
+    padding: 20px 0 30px;
     margin: 0 auto;
     width: 90%;
     max-width: 1100px;
-    word-wrap: break-word;
 }
 
 .section-title {
     text-align: center;
-    font-family: 'VT323', monospace;
+    font-family: var(--font-mono);
     font-size: 28px;
-    color: #FFFFFF;
-    text-transform: uppercase;
+    color: var(--win-border-light);
     letter-spacing: 2px;
-    margin: 40px auto 20px auto;
-    text-shadow: 2px 2px 0px #000000;
+    margin: 40px auto 20px;
+    text-shadow: 2px 2px 0px var(--win-border-dark);
 }
 
 #projects, #about, #contact, #comments {
     scroll-margin-top: 30px;
 }
 
-/* ==========================================
-   LAYOUT A GRIGLIA
-   ========================================== */
-.grid {
+.grid, .grid1 {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
     max-width: 1200px;
-    margin: 0 auto 50px auto;
-    justify-content: center;
+    margin: 0 auto 50px;
     padding: 0 15px;
 }
 
-.grid1 {
-    display: grid;
-    grid-template-columns: 1fr;
-    max-width: 1200px;
-    margin: 0 auto 50px auto;
-    justify-content: center;
-    padding: 0 15px;
-}
+.grid { grid-template-columns: 1fr 1fr; gap: 25px; }
+.grid1 { grid-template-columns: 1fr; }
 
 /* ==========================================
-   FINESTRE WINDOWS 95 (STANDARD PAGINA)
+   4. WINDOWS & BUTTON COMPONENTS
    ========================================== */
 .window {
-    background-color: #C0C0C0;
-    border: 2px outset #DFDFDF;
-    border-right-color: #000000;
-    border-bottom-color: #000000;
-    overflow: hidden;
-    font-family: 'MS Sans Serif', monospace;
-    transition: all 0.2s ease;
-    box-shadow: 1px 1px 0 #FFFFFF inset, -1px -1px 0 #000000 inset;
+    background-color: var(--win-bg);
+    border: 2px outset var(--win-border-shadow);
+    border-right-color: var(--win-border-dark);
+    border-bottom-color: var(--win-border-dark);
+    font-family: var(--font-sans);
 }
 
 .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(to right, #000080 0%, #1084D7 100%);
+    background: linear-gradient(to right, var(--win-blue) 0%, var(--win-blue-light) 100%);
     padding: 2px 4px;
-    color: #FFFFFF;
+    color: var(--win-border-light);
     font-size: 12px;
     font-weight: bold;
-    border-bottom: 1px solid #DFDFDF;
-    font-family: 'MS Sans Serif', Arial, sans-serif;
     user-select: none;
-    cursor: move; /* Abilita l'icona di trascinamento */
+    cursor: move;
 }
 
+/* Window close button */
 .dot {
     width: 16px;
     height: 15px;
     cursor: pointer;
-    background: #C0C0C0;
-    border: 2px outset #DFDFDF;
-    border-right-color: #000000;
-    border-bottom-color: #000000;
-    margin: 2px;
+    background: var(--win-bg);
+    border: 2px outset var(--win-border-shadow);
+    border-right-color: var(--win-border-dark);
+    border-bottom-color: var(--win-border-dark);
     font-size: 10px;
     font-weight: bold;
-    color: #000000;
+    color: var(--win-border-dark);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'MS Sans Serif', Arial, sans-serif;
-    line-height: 10px;
 }
 
-.dot::before {
-    content: '×';
-    font-size: 12px;
-}
-
-.dot:active {
-    border-style: inset;
-    border-top-color: #000000;
-    border-left-color: #000000;
-    border-right-color: #FFFFFF;
-    border-bottom-color: #FFFFFF;
-    padding-top: 1px;
-    padding-left: 1px;
-}
+.dot::before { content: '×'; font-size: 12px; }
 
 .content_title {
-    padding: 12px 15px 4px 15px;
-    color: #000000;
+    padding: 12px 15px 4px;
     font-size: 22px;
-    font-weight: normal;
-    font-family: 'VT323', monospace;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    border-bottom: 2px groove #DFDFDF;
-    margin-bottom: 8px;
+    font-family: var(--font-mono);
+    border-bottom: 2px groove var(--win-border-shadow);
 }
 
-.content_text {
+.content_text, .about_me {
     padding: 10px 15px;
-    color: #000000;
     font-size: 11px;
-    font-family: 'MS Sans Serif', monospace;
-    line-height: 1.5;
+    color: var(--win-border-dark);
 }
 
+.about_me {
+    font-family: var(--font-mono);
+    font-size: 15px;
+}
+
+/* Win95 Raised/Pressed Button Effect */
 .button {
     display: inline-block;
     margin: 15px;
     padding: 4px 12px;
-    color: #000000;
-    background: #C0C0C0;
-    border: 2px outset #DFDFDF;
-    border-right-color: #000000;
-    border-bottom-color: #000000;
+    color: var(--win-border-dark);
+    background: var(--win-bg);
+    border: 2px outset var(--win-border-shadow);
+    border-right-color: var(--win-border-dark);
+    border-bottom-color: var(--win-border-dark);
     font-size: 11px;
     font-weight: bold;
     text-decoration: none;
     cursor: pointer;
-    font-family: 'MS Sans Serif', Arial, sans-serif;
     user-select: none;
 }
 
 .button:active:not(:disabled) {
     border-style: inset;
-    border-color: #000000;
-    border-right-color: #DFDFDF;
-    border-bottom-color: #DFDFDF;
-    padding-top: 5px;
-    padding-left: 13px;
+    border-color: var(--win-border-dark) var(--win-border-shadow) var(--win-border-shadow) var(--win-border-dark);
 }
 
-.button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.link {
+    text-decoration: underline;
+    color: var(--win-blue);
+    cursor: pointer;
 }
 
-.about_me {
-    padding: 10px 15px;
-    font-family: 'VT323', 'MS Sans Serif', monospace;
-    font-size: 15px;
-    color: #000000;
-    line-height: 1.3;
+.link:hover {
+    color: #0000FF;
+    background-color: var(--win-border-light);
 }
 
-.margin-top {
-    margin-top: 60px;
-}
+.margin-top { margin-top: 60px; }
 
-/* ANIMAZIONE PUNTINI */
+/* Animated loading dots */
 .dots::after {
     content: '';
     animation: dots-animation 2s infinite;
@@ -389,119 +294,47 @@ body::before {
 }
 
 /* ==========================================
-   OVERLAY & SISTEMA UNIFICATO MODALI
-   (PROGETTI, TASKBAR & HELP PANEL)
+   5. OVERLAY & MODAL DIALOGS
    ========================================== */
 #overlay {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
+    inset: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 4000 !important;
+    z-index: 4000;
 }
 
-#overlay.modal-active,
-#overlay.active,
-#overlay.show {
-    display: block !important;
-}
+#overlay.modal-active { display: block; }
 
-/* Stile base unificato per TUTTE le finestre modali */
-.modal-window,
-.taskbar-modal,
-#help-panel {
+.modal-window, #help-panel {
     display: none;
     position: fixed;
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
     max-width: 750px;
     max-height: 85vh;
-    background-color: #C0C0C0;
-    
-    /* Bordo 3D Windows 95 */
-    border-top: 2px solid #FFFFFF;
-    border-left: 2px solid #FFFFFF;
-    border-right: 2px solid #000000;
-    border-bottom: 2px solid #000000;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5), inset 1px 1px 0 #DFDFDF;
-    
-    z-index: 4001 !important;
-    overflow: hidden;
+    background-color: var(--win-bg);
+    border: 2px solid;
+    border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    z-index: 4001;
     flex-direction: column;
 }
 
-/* Per il supporto al trascinamento (quando attivo tramite JS) */
-.draggable-window {
-    position: fixed !important;
-}
+.draggable-window { position: fixed !important; }
 
-/* Stato attivo unificato per far apparire le modali */
-.modal-window.modal-active,
-.modal-window.active,
-.taskbar-modal.modal-active,
-.taskbar-modal.active,
-#help-panel.show,
-#help-panel.active {
+.modal-window.modal-active, #help-panel.show {
     display: flex !important;
 }
 
-/* Header unificato delle modali */
-.modal-window .header,
-.taskbar-modal .header,
-#help-panel .header {
-    background: linear-gradient(to right, #000080 0%, #1084D7 100%);
-    padding: 3px 6px;
-    color: #FFFFFF;
-    font-family: 'MS Sans Serif', Arial, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    user-select: none;
-    flex-shrink: 0;
-    border-bottom: 1px solid #DFDFDF;
-    cursor: move;
-}
-
-/* Corpo e scrolling del contenuto modale */
-.modal-window .modal-body,
-.modal-window .content_text,
-.taskbar-modal .modal-body,
-.taskbar-modal .content,
-#help-panel .content {
+.modal-body {
     padding: 15px;
     overflow-y: auto;
     max-height: calc(85vh - 40px);
-    color: #000000;
-    font-family: 'MS Sans Serif', Arial, sans-serif;
     font-size: 12px;
-    line-height: 1.4;
-    background: #C0C0C0;
 }
 
-/* Elementi Form all'interno delle Modali */
-.modal-window fieldset,
-.taskbar-modal fieldset {
-    border: 2px groove #DFDFDF;
-    padding: 10px;
-    margin-bottom: 12px;
-}
-
-.modal-window legend,
-.taskbar-modal legend {
-    font-family: 'MS Sans Serif', Arial, sans-serif;
-    font-size: 11px;
-    color: #000000;
-    padding: 0 4px;
-}
-
-/* Galleria immagini nelle modali */
 .gallery {
     display: flex;
     flex-wrap: wrap;
@@ -512,28 +345,25 @@ body::before {
 .images {
     width: 200px;
     height: 150px;
-    border: 1px solid #000000;
+    border: 1px solid var(--win-border-dark);
     object-fit: cover;
-    image-rendering: pixelated;
 }
 
 /* ==========================================
-   COMMENTI & INPUT
+   6. COMMENTS SECTION
    ========================================== */
 .comments_log {
-    border-top: 1px solid #000000;
+    border-top: 1px solid var(--win-border-dark);
     display: flex;
     align-items: center;
     margin-top: 15px;
     padding: 5px;
-    background: #C0C0C0;
 }
 
 .input {
-    background: #FFFFFF !important;
-    border: 2px inset #000000 !important;
-    color: #000000 !important;
-    font-family: 'MS Sans Serif', monospace !important;
+    background: var(--win-border-light);
+    border: 2px inset var(--win-border-dark);
+    color: var(--win-border-dark);
     font-size: 11px;
     flex-grow: 1;
     padding: 4px;
@@ -541,55 +371,48 @@ body::before {
 }
 
 .terminal-user {
-    font-family: 'VT323', monospace;
+    font-family: var(--font-mono);
     font-size: 15px;
-    color: #000000;
     padding: 0 8px;
 }
 
+.comment-item {
+    margin-bottom: 6px;
+    font-size: 11px;
+}
+
+.comment-date { color: #666666; }
+.comment-author { color: var(--win-blue); font-weight: bold; }
+.comment-text { color: var(--win-border-dark); }
+
 .counter {
     padding: 10px;
-    background-color: #C0C0C0;
-    font-family: 'MS Sans Serif', monospace;
     font-size: 11px;
-    color: #000000;
-    border: 2px inset #000000;
+    border: 2px inset var(--win-border-dark);
 }
 
 /* ==========================================
-   STATUS BAR (TASKBAR) - WIN95
+   7. DESKTOP TASKBAR
    ========================================== */
 #status-bar {
-    display: flex !important;
+    display: flex;
     position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 40px;
-    background: #C0C0C0;
-    border-top: 2px solid #FFFFFF;
-    border-left: 2px solid #FFFFFF;
-    border-right: 2px solid #000000;
-    border-bottom: 2px solid #000000;
+    bottom: 0; left: 0; width: 100%; height: 40px;
+    background: var(--win-bg);
+    border-top: 2px solid var(--win-border-light);
     z-index: 3000;
     align-items: center;
     padding: 2px 4px;
     gap: 6px;
-    font-family: 'MS Sans Serif', Arial, sans-serif;
     font-size: 11px;
-    color: #000000;
 }
 
-/* TASTO START NELLA TASKBAR */
 .taskbar-start {
     width: 80px;
     height: 32px;
-    background: #C0C0C0;
-    border-top: 2px solid #FFFFFF;
-    border-left: 2px solid #FFFFFF;
-    border-right: 2px solid #000000;
-    border-bottom: 2px solid #000000;
-    box-shadow: inset -1px -1px #000000, inset 1px 1px #DFDFDF;
+    background: var(--win-bg);
+    border: 2px solid;
+    border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -597,207 +420,105 @@ body::before {
     cursor: pointer;
     font-weight: bold;
     font-size: 14px;
-    user-select: none;
 }
 
-.taskbar-start:active,
-.taskbar-start[aria-expanded="true"],
-.start-menu-button.active {
-    border-top: 2px solid #000000;
-    border-left: 2px solid #000000;
-    border-right: 2px solid #FFFFFF;                
-    border-bottom: 2px solid #FFFFFF;
-    box-shadow: inset 1px 1px #000000;
+.taskbar-start:active, .taskbar-start[aria-expanded="true"] {
+    border-color: var(--win-border-dark) var(--win-border-light) var(--win-border-light) var(--win-border-dark);
     background-color: #B0B0B0;
-    padding-top: 1px;
-    padding-left: 1px;
 }
 
-.start-btn-icon {
-    width: 28px;
-    height: 28px;
-    object-fit: contain;
-    image-rendering: pixelated;
-    flex-shrink: 0;
-}
+.taskbar-apps { display: flex; gap: 4px; height: 100%; }
 
-/* CONTENITORE PER BADGE/APP NELLA TASKBAR */
-.taskbar-apps {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    height: 100%;
-}
-
-/* BADGE/PULSANTI RETRO INCAVATI ALL'HOVER E ATTIVI */
-.taskbar-item {
+.taskbar-item, .taskbar-fixed {
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 2px 8px;
     height: 32px;
-    background-color: #C0C0C0;
-    border-top: 2px solid #FFFFFF;
-    border-left: 2px solid #FFFFFF;
-    border-right: 2px solid #000000;
-    border-bottom: 2px solid #000000;
-    font-family: 'MS Sans Serif', Arial, sans-serif;
     font-size: 14px;
-    color: #000000;
     white-space: nowrap;
+}
+
+.taskbar-item {
+    border: 2px solid;
+    border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
     cursor: pointer;
-    user-select: none;
 }
 
-.taskbar-fixed {
-    display: flex;
-    align-items: center;
-    height: 32px;
-    font-family: 'MS Sans Serif', Arial, sans-serif;
-    font-size: 14px;
-    color: #000000;
-    white-space: nowrap;
-    cursor: default;
-}
-
-.taskbar-fixed strong {
-    color: #000080;
-}
-
-/* BADGE/PULSANTI RETRO INCAVATI QUANDO LA FINESTRA È APERTA */
-.taskbar-item.active,
-.taskbar-item.open {
-    border-top: 2px solid #000000;
-    border-left: 2px solid #000000;
-    border-right: 2px solid #FFFFFF;
-    border-bottom: 2px solid #FFFFFF;
+.taskbar-item.active {
+    border-color: var(--win-border-dark) var(--win-border-light) var(--win-border-light) var(--win-border-dark);
     background-color: #B0B0B0;
-    box-shadow: inset 1px 1px #000000;
-    padding: 3px 7px 1px 9px; /* Simulazione della pressione del tasto */
 }
 
-.tb-icon {
-    font-size: 15px;
-    height: 28px;
-    width: 28px;
-}
+.taskbar-item strong, .taskbar-fixed strong { color: var(--win-blue); }
 
-.tb-icon-fixed{
-    font-size: 15px;
-    height: 28px;
-    width: 28px;
-}
+.pad-left { padding-left: 4px; }
 
-.taskbar-item strong {
-    color: #000080;
-}
-
-/* OROLOGIO NELLA TASKBAR */
 #clock {
     margin-left: auto;
     padding: 3px 8px;
     height: 32px;
-    border-top: 2px solid #000000;
-    border-left: 2px solid #000000;
-    border-right: 2px solid #FFFFFF;
-    border-bottom: 2px solid #FFFFFF;
-    background: #C0C0C0;
+    border: 2px inset var(--win-border-dark);
     display: flex;
     align-items: center;
-    font-family: 'MS Sans Serif', Arial, sans-serif;
     font-size: 14px;
 }
 
 /* ==========================================
-   NOTIFICHE TOAST
+   8. TOAST & LOADING ANIMATIONS
    ========================================== */
 .toast {
     position: fixed;
-    bottom: 50px;
-    right: 20px;
-    background: #C0C0C0;
-    border: 2px outset #DFDFDF;
+    bottom: 50px; right: 20px;
+    background: var(--win-bg);
+    border: 2px outset var(--win-border-shadow);
     padding: 8px 12px;
-    font-family: 'MS Sans Serif', monospace;
     font-size: 11px;
-    color: #000000;
     z-index: 6000;
-    box-shadow: 1px 1px 0 #FFFFFF inset, -1px -1px 0 #000000 inset;
     transition: opacity 0.3s ease;
 }
 
-.toast.hide {
-    opacity: 0;
-}
+.toast.hide { opacity: 0; }
 
-/* ==========================================
-   LOADING SCREEN
-   ========================================== */
 #loading-screen {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    inset: 0;
     background: #018184;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 9999;
-    opacity: 1;
-    transition: opacity 0.5s ease-out;
+    transition: opacity 0.4s ease;
 }
 
-#loading-window {
-    width: 350px;
-    background: #C0C0C0;
-    border: 2px outset #DFDFDF;
-}
-
-#loading-window .header {
-    background: linear-gradient(to right, #000080 0%, #1084D7 100%);
-    color: #FFFFFF;
-    padding: 2px 4px;
-    font-weight: bold;
-    font-size: 12px;
-    cursor: default;
-}
+#loading-window { width: 350px; background: var(--win-bg); border: 2px outset var(--win-border-shadow); }
 
 .loading-content {
     padding: 15px;
-    font-family: 'VT323', monospace;
+    font-family: var(--font-mono);
     font-size: 15px;
-    color: #000000;
 }
 
-.loading-content p {
-    margin: 0 0 4px 0;
-    opacity: 0;
-}
+.loading-content p { margin: 0 0 4px 0; opacity: 0; }
 
 .loading-bar {
-    width: 100%;
-    height: 16px;
-    background: #C0C0C0;
-    border: 2px inset #000000;
+    width: 100%; height: 16px;
+    border: 2px inset var(--win-border-dark);
     margin: 10px 0;
     display: none;
 }
 
 .loading-progress {
     height: 100%;
-    background: linear-gradient(to right, #000080 0%, #1084D7 100%);
+    background: linear-gradient(to right, var(--win-blue), var(--win-blue-light));
     width: 0%;
     transition: width 0.3s ease;
 }
 
-#loading-percent {
-    text-align: center;
-    font-weight: bold;
-    margin-top: 5px;
-    display: none;
-}
+#loading-percent { text-align: center; font-weight: bold; display: none; }
 
 /* ==========================================
-   RESPONSIVE MEDIA QUERIES
+   9. MEDIA QUERIES & RESPONSIVENESS
    ========================================== */
 @media (max-width: 900px) {
     .grid { grid-template-columns: 1fr; }
@@ -806,7 +527,6 @@ body::before {
 }
 
 @media (max-width: 480px) {
-    .ascii-title { font-size: 20px; }
-    .section-title { font-size: 20px; }
+    .ascii-title, .section-title { font-size: 20px; }
     #status-bar { display: none !important; }
 }
