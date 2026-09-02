@@ -1,15 +1,27 @@
 /**
- * ==============================================================================
- * TPPage Stylesheet - Windows 95 Theme & Web OS Layout Engine (Fixed Start Menu)
- * ==============================================================================
+ * TPPage Stylesheet
+ * 
+ * Windows 95 Theme & Web OS Layout Engine.
+ * Provides pixel-perfect retro styling, responsive grid systems, window modals,
+ * custom scrollbars, and taskbar integration.
+ *
+ * @project     TPPage Web OS
+ * @version     1.1.0
+ * @author      TPPage
+ * @license     MIT
  */
 
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
 
-/* ==========================================
+/* ==========================================================================
    1. GLOBAL VARIABLES & RESET
-   ========================================== */
+   ========================================================================== */
 
+/**
+ * Global CSS custom properties for Windows 95 color palette and typography.
+ *
+ * @section Variables
+ */
 :root {
     --win-bg: #C0C0C0;
     --win-border-light: #FFFFFF;
@@ -23,10 +35,16 @@
     --font-retro: 'Press Start 2P', monospace;
 }
 
+/**
+ * Universal box-sizing reset.
+ */
 *, *::before, *::after {
     box-sizing: border-box;
 }
 
+/**
+ * Global typography rendering adjustments for retro crispness.
+ */
 body, * {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -34,17 +52,28 @@ body, * {
     text-rendering: optimizeLegibility;
 }
 
+/**
+ * Pixelated rendering enforcement for retro graphical elements.
+ */
 img, canvas, svg, .menu-icon, .start-btn-icon, .tb-icon, .images {
     image-rendering: pixelated;
     image-rendering: crisp-edges;
     image-rendering: -moz-crisp-edges;
 }
 
+/**
+ * Base HTML document setup.
+ */
 html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
 }
 
+/**
+ * Main application container with scanline background texture.
+ *
+ * @element body
+ */
 body {
     background-color: #018184;
     background-image: repeating-linear-gradient(
@@ -63,6 +92,9 @@ body {
     overflow-x: hidden;
 }
 
+/**
+ * Fixed CRT overlay effect for visual authenticity.
+ */
 body::before {
     content: '';
     position: fixed;
@@ -78,10 +110,15 @@ body::before {
     z-index: 9999;
 }
 
-/* ==========================================
-   2. START MENU & SIDEBAR (FIXED)
-   ========================================== */
+/* ==========================================================================
+   2. START MENU & SIDEBAR
+   ========================================================================== */
 
+/**
+ * Windows 95 Start Menu container.
+ *
+ * @component StartMenu
+ */
 .start-menu {
     display: none;
     position: fixed;
@@ -97,10 +134,16 @@ body::before {
     padding: 2px;
 }
 
+/**
+ * Active state display trigger for Start Menu.
+ */
 .start-menu.active {
     display: flex !important;
 }
 
+/**
+ * Start Menu vertical banner strip.
+ */
 .start-menu .sidebar-menu {
     width: 32px;
     background: linear-gradient(to top, var(--win-blue), var(--win-blue-light));
@@ -111,6 +154,9 @@ body::before {
     flex-shrink: 0;
 }
 
+/**
+ * Vertical banner typography inside Start Menu.
+ */
 .win-banner-text {
     color: var(--win-border-light);
     writing-mode: vertical-rl;
@@ -122,6 +168,9 @@ body::before {
     font-family: var(--font-vt323);
 }
 
+/**
+ * Content container for menu items inside Start Menu.
+ */
 .start-menu .content {
     flex: 1;
     padding: 2px;
@@ -129,7 +178,9 @@ body::before {
     flex-direction: column;
 }
 
-/* Fix per uniformare link e bottoni nel menu Start in stile Win95 */
+/**
+ * Unified style for anchor links and buttons in Start Menu.
+ */
 .start-menu .content a,
 .start-menu .content .menu-link-btn {
     display: flex;
@@ -153,6 +204,9 @@ body::before {
     color: var(--win-border-light);
 }
 
+/**
+ * Icon elements used in menus and taskbar items.
+ */
 .menu-icon, .start-btn-icon, .tb-icon {
     width: 24px;
     height: 24px;
@@ -160,6 +214,9 @@ body::before {
     flex-shrink: 0;
 }
 
+/**
+ * Horizontal separators inside Start Menu.
+ */
 .start-menu hr {
     border: none;
     border-top: 1px solid var(--win-border-shadow);
@@ -167,6 +224,11 @@ body::before {
     margin: 4px 1px;
 }
 
+/**
+ * Sliding panel sidebar container.
+ *
+ * @component Sidebar
+ */
 .sidebar {
     font-family: var(--font-vt323);
     font-size: 18px;
@@ -188,10 +250,15 @@ body::before {
     transform: translateX(0);
 }
 
-/* ==========================================
+/* ==========================================================================
    3. TITLES & GRID LAYOUTS
-   ========================================== */
+   ========================================================================== */
 
+/**
+ * Primary retro ASCII heading style.
+ *
+ * @component ASCII Title
+ */
 .ascii-title {
     text-align: center;
     font-family: var(--font-retro);
@@ -204,6 +271,9 @@ body::before {
     word-break: break-word;
 }
 
+/**
+ * Secondary section headers with dropped shadow.
+ */
 .section-title {
     text-align: center;
     font-family: var(--font-vt323);
@@ -214,10 +284,18 @@ body::before {
     text-shadow: 2px 2px 0px var(--win-border-dark);
 }
 
+/**
+ * Smooth scrolling scroll margins for main sections.
+ */
 #projects, #about, #contact, #comments {
     scroll-margin-top: 20px;
 }
 
+/**
+ * Grid layout wrappers for desktop content distribution.
+ *
+ * @layout Grid
+ */
 .grid, .grid1 {
     display: grid;
     width: 100%;
@@ -235,10 +313,15 @@ body::before {
     grid-template-columns: 1fr; 
 }
 
-/* ==========================================
+/* ==========================================================================
    4. WINDOWS & BUTTON COMPONENTS
-   ========================================== */
+   ========================================================================== */
 
+/**
+ * Standard desktop window component with 3D bevel borders.
+ *
+ * @component Window
+ */
 .window {
     background-color: var(--win-bg);
     border: 2px solid;
@@ -249,6 +332,9 @@ body::before {
     flex-direction: column;
 }
 
+/**
+ * Draggable window titlebar header with gradient background.
+ */
 .header {
     display: flex;
     align-items: center;
@@ -262,6 +348,9 @@ body::before {
     cursor: move;
 }
 
+/**
+ * Window control close button (X).
+ */
 .dot {
     width: 20px;
     height: 19px;
@@ -289,6 +378,9 @@ body::before {
     padding: 1px 0 0 1px;
 }
 
+/**
+ * Window content title bar with bottom border accent.
+ */
 .content_title {
     padding: 10px 15px 4px;
     font-size: 28px;
@@ -296,6 +388,9 @@ body::before {
     border-bottom: 2px groove var(--win-border-light-shadow);
 }
 
+/**
+ * Generic text content area within windows.
+ */
 .content_text {
     padding: 12px 15px;
     font-size: 18px;
@@ -310,6 +405,11 @@ body::before {
     color: var(--win-border-dark);
 }
 
+/**
+ * Classic Windows 95 bevel button styling.
+ *
+ * @component Button
+ */
 .button {
     display: inline-block;
     align-self: flex-start;
@@ -333,6 +433,9 @@ body::before {
     padding: 5px 13px 3px 15px;
 }
 
+/**
+ * Hyperlink text decoration styling.
+ */
 .link {
     text-decoration: underline;
     color: var(--win-blue);
@@ -349,6 +452,9 @@ body::before {
     margin-top: 40px; 
 }
 
+/**
+ * Animated dots extension for loading text indicators.
+ */
 .dots::after {
     content: '';
     animation: dots-animation 2s infinite;
@@ -361,14 +467,19 @@ body::before {
     100% { content: '...'; }
 }
 
-/* ==========================================
+/* ==========================================================================
    5. OVERLAY & DESKTOP WINDOW DIALOGS
-   ========================================== */
+   ========================================================================== */
 
 #overlay {
     display: none !important;
 }
 
+/**
+ * Centered floating modal window instance.
+ *
+ * @component ModalWindow
+ */
 .modal-window, #help-panel {
     display: none;
     position: fixed !important;
@@ -386,6 +497,9 @@ body::before {
     flex-direction: column;
 }
 
+/**
+ * Transform reset during drag operations on floating windows.
+ */
 .modal-window.is-dragging, 
 #help-panel.is-dragging,
 .modal-window.dragged, 
@@ -393,6 +507,9 @@ body::before {
     transform: none !important;
 }
 
+/**
+ * Inactive modal titlebar appearance.
+ */
 .modal-window .header {
     background: var(--win-border-shadow);
     color: var(--win-bg);
@@ -400,6 +517,9 @@ body::before {
     user-select: none;
 }
 
+/**
+ * Focused modal titlebar appearance.
+ */
 .modal-window.focused .header,
 .sidebar.focused .header {
     background: linear-gradient(to right, var(--win-blue) 0%, var(--win-blue-light) 100%);
@@ -410,6 +530,9 @@ body::before {
     display: flex !important;
 }
 
+/**
+ * Scrollable inner body container for modal dialogs.
+ */
 .modal-body {
     padding: 15px;
     overflow-y: auto;
@@ -423,6 +546,9 @@ body::before {
     font-size: 22px;
 }
 
+/**
+ * Project thumbnail gallery layout.
+ */
 .gallery {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -437,10 +563,15 @@ body::before {
     object-fit: cover;
 }
 
-/* ==========================================
+/* ==========================================================================
    6. COMMENTS SECTION & CHAT LOG
-   ========================================== */
+   ========================================================================== */
 
+/**
+ * Input row controls for real-time chat module.
+ *
+ * @component ChatInput
+ */
 .comments-log,
 .comments_log {
     border-top: 1px solid var(--win-border-shadow);
@@ -464,6 +595,9 @@ body::before {
     min-width: 0;
 }
 
+/**
+ * Chat history messages container.
+ */
 #comments-list {
     max-height: 350px;
     overflow-y: auto;
@@ -508,6 +642,11 @@ body::before {
     border: 2px inset var(--win-bg);
 }
 
+/**
+ * User role badges color coding.
+ *
+ * @section Badges
+ */
 .role-badge {
     font-weight: bold;
     font-size: 16px;
@@ -520,10 +659,15 @@ body::before {
 .badge-user  { color: #0040ff; }
 .badge-guest { color: #888888; }
 
-/* ==========================================
+/* ==========================================================================
    7. DESKTOP TASKBAR
-   ========================================== */
+   ========================================================================== */
 
+/**
+ * Fixed desktop taskbar bar container.
+ *
+ * @component Taskbar
+ */
 #status-bar {
     display: flex;
     position: fixed;
@@ -540,6 +684,9 @@ body::before {
     font-size: 18px;
 }
 
+/**
+ * Start Button element on the bottom-left of taskbar.
+ */
 .taskbar-start {
     width: 95px;
     height: 34px;
@@ -563,6 +710,9 @@ body::before {
     background-color: #B0B0B0;
 }
 
+/**
+ * Open applications container inside taskbar.
+ */
 .taskbar-apps { 
     display: flex; 
     gap: 4px; 
@@ -577,8 +727,11 @@ body::before {
     display: none;
 }
 
+/**
+ * Individual app tabs and user status badges inside taskbar.
+ */
 .taskbar-item, .taskbar-fixed {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
     padding: 2px 8px;
@@ -587,6 +740,8 @@ body::before {
     white-space: nowrap;
     user-select: none;
     flex-shrink: 0;
+    width: auto;
+    max-width: none;
 }
 
 .taskbar-item {
@@ -596,6 +751,20 @@ body::before {
     background: var(--win-bg);
 }
 
+/**
+ * Prevents line breaks for dynamic user dynamic strings (e.g. User: TPPage [ADMIN]).
+ */
+.taskbar-item span, 
+.taskbar-fixed span,
+#display-user-id {
+    white-space: nowrap !important;
+    word-break: normal !important;
+    display: inline-block;
+}
+
+/**
+ * Active/Pressed window tab state inside taskbar.
+ */
 .taskbar-item.active {
     border-color: var(--win-border-dark) var(--win-border-light) var(--win-border-light) var(--win-border-dark);
     background-color: #E0E0E0;
@@ -611,6 +780,9 @@ body::before {
     padding-left: 2px; 
 }
 
+/**
+ * Tray area system clock display on taskbar.
+ */
 #clock {
     margin-left: auto;
     padding: 2px 10px;
@@ -624,10 +796,15 @@ body::before {
     background: var(--win-bg);
 }
 
-/* ==========================================
+/* ==========================================================================
    8. TOAST NOTIFICATIONS & BOOT ANIMATIONS
-   ========================================== */
+   ========================================================================== */
 
+/**
+ * System notification popup (Toast).
+ *
+ * @component Toast
+ */
 .retro-toast,
 .toast {
     position: fixed;
@@ -651,6 +828,11 @@ body::before {
     pointer-events: auto;
 }
 
+/**
+ * Fullscreen OS Boot/Loading screen overlay.
+ *
+ * @component BootScreen
+ */
 #loading-screen {
     position: fixed;
     inset: 0;
@@ -703,10 +885,15 @@ body::before {
     display: none; 
 }
 
-/* ==========================================
+/* ==========================================================================
    9. USER AUTHENTICATION MODAL STYLES
-   ========================================== */
+   ========================================================================== */
 
+/**
+ * User login and registration form inputs container.
+ *
+ * @component AuthForm
+ */
 .auth-form-container {
     display: flex;
     flex-direction: column;
@@ -716,6 +903,9 @@ body::before {
     font-family: var(--font-vt323);
 }
 
+/**
+ * Inset retro input field.
+ */
 .retro-input {
     font-family: var(--font-vt323) !important;
     background: var(--win-border-light);
@@ -734,10 +924,13 @@ body::before {
     opacity: 0.8;
 }
 
-/* ==========================================
+/* ==========================================================================
    10. MEDIA QUERIES & RESPONSIVENESS
-   ========================================== */
+   ========================================================================== */
 
+/**
+ * Desktop large screen viewport optimizations (1200px and up).
+ */
 @media (min-width: 1200px) {
     body { font-size: 20px; }
     .ascii-title { font-size: 80px; }
@@ -747,12 +940,23 @@ body::before {
     .button { font-size: 20px; }
 }
 
+/**
+ * Tablet viewport adjustments (Up to 900px).
+ */
 @media (max-width: 900px) {
     .ascii-title { font-size: 48px; }
     .section-title { font-size: 30px; }
 }
 
-@media (max-width: 600px) {
+/**
+ * Small screen viewport fallback rules (Below 615px).
+ */
+@media (max-width: 615px) {
+    /* Hides user role badge ([ADMIN], [USER], etc.) inside the taskbar badge */
+    #display-user-id .role-badge {
+        display: none !important;
+    }
+
     body { padding-bottom: 50px; }
     
     .grid { 
@@ -762,7 +966,9 @@ body::before {
     .ascii-title { font-size: 32px; text-shadow: 2px 2px 0px #333; }
     .section-title { font-size: 26px; margin: 25px auto 10px; }
 
-    .modal-window, #help-panel, .sidebar {
+    /* Centers mobile windows and help panel ONLY when active */
+    .modal-window.active, 
+    #help-panel.active {
         position: fixed !important;
         top: 50% !important;
         left: 50% !important;
@@ -771,6 +977,16 @@ body::before {
         max-width: none !important;
         max-height: 85vh !important;
         margin: 0 !important;
+    }
+
+    /* Keeps sidebar position aligned on mobile when active */
+    .sidebar.active {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 94% !important;
+        max-height: 85vh !important;
     }
 
     .header {
@@ -816,5 +1032,64 @@ body::before {
 
     .gallery {
         grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    }
+}
+
+@media (max-width: 363px) {
+    /* 1. Riduzione del pulsante Start per risparmiare spazio */
+    .taskbar-start {
+        width: 60px !important;
+        font-size: 14px !important;
+        padding: 0 2px !important;
+    }
+    
+    .start-btn-icon {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    /* 2. Ottimizzazione delle schede applicazione sulla Taskbar */
+    .taskbar-item, .taskbar-fixed {
+        font-size: 13px !important;
+        padding: 2px 4px !important;
+        gap: 3px !important;
+    }
+
+    .tb-icon {
+        width: 18px !important;
+        height: 18px !important;
+    }
+
+    /* 3. Riduzione dei margini delle finestre modali per non sbordare */
+    .modal-window.active, 
+    #help-panel.active,
+    .sidebar.active {
+        width: 98% !important;
+        max-height: 90vh !important;
+    }
+
+    .modal-body {
+        padding: 6px !important;
+        font-size: 16px !important;
+    }
+
+    /* 4. Adattamento dell'intestazione (ASCII Title e Modali) */
+    .ascii-title {
+        font-size: 24px !important;
+        padding: 15px 5px 10px !important;
+    }
+
+    .section-title {
+        font-size: 22px !important;
+    }
+
+    .content_title {
+        font-size: 22px !important;
+        padding: 8px 10px 4px !important;
+    }
+
+    /* 5. Prevenzione dello scorrimento orizzontale forzato */
+    body {
+        overflow-x: hidden !important;
     }
 }
