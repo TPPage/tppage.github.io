@@ -12,8 +12,6 @@ A personal website featuring a **Windows 95** desktop interface, complete with a
 - **`trioxide.exe`**: Fake Win32 virus with OpenGL shaders.
 - **`italy.exe`**: Win32/DOS C++ program generating ASCII art of Italy.
 - **`ibm_pc_case`**: IBM PC-inspired ATX case (3D `.stl` model + gallery).
-- **`comments.log`**: Live terminal-style comment log[cite: 1, 2].
-
 ---
 
 ## ✨ Key Features
