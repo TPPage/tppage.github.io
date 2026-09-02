@@ -1,7 +1,7 @@
 /**
- * ==========================================================
- * TPPage Stylesheet - Windows 95 Theme & Layouts 
- * ==========================================================
+ * ==============================================================================
+ * TPPage Stylesheet - Windows 95 Theme & Web OS Layout Engine (Fixed Start Menu)
+ * ==============================================================================
  */
 
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
@@ -9,16 +9,16 @@
 /* ==========================================
    1. GLOBAL VARIABLES & RESET
    ========================================== */
+
 :root {
-    /* Windows 95 System Palette */
     --win-bg: #C0C0C0;
     --win-border-light: #FFFFFF;
     --win-border-dark: #000000;
-    --win-border-shadow: #DFDFDF;
+    --win-border-shadow: #808080;
+    --win-border-light-shadow: #DFDFDF;
     --win-blue: #000080;
     --win-blue-light: #1084D7;
     
-    /* Typography Constants */
     --font-vt323: 'VT323', monospace;
     --font-retro: 'Press Start 2P', monospace;
 }
@@ -27,7 +27,6 @@
     box-sizing: border-box;
 }
 
-/* Perfect crisp rendering for retro fonts & bitmap aesthetics */
 body, * {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -35,7 +34,6 @@ body, * {
     text-rendering: optimizeLegibility;
 }
 
-/* Pixel-perfect image rendering */
 img, canvas, svg, .menu-icon, .start-btn-icon, .tb-icon, .images {
     image-rendering: pixelated;
     image-rendering: crisp-edges;
@@ -49,7 +47,13 @@ html {
 
 body {
     background-color: #018184;
-    background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
+    background-image: repeating-linear-gradient(
+        0deg, 
+        rgba(0, 0, 0, 0.15) 0px, 
+        rgba(0, 0, 0, 0.15) 1px, 
+        transparent 1px, 
+        transparent 2px
+    );
     font-family: var(--font-vt323);
     font-size: 18px;
     line-height: 1.2;
@@ -59,31 +63,37 @@ body {
     overflow-x: hidden;
 }
 
-/* Retro CRT monitor overlay effect */
 body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.03) 0px, rgba(0, 0, 0, 0.03) 1px, transparent 1px, transparent 2px);
+    background-image: repeating-linear-gradient(
+        0deg, 
+        rgba(0, 0, 0, 0.03) 0px, 
+        rgba(0, 0, 0, 0.03) 1px, 
+        transparent 1px, 
+        transparent 2px
+    );
     pointer-events: none;
     z-index: 9999;
 }
 
 /* ==========================================
-   2. START MENU & EXPLORER SIDEBAR
+   2. START MENU & SIDEBAR (FIXED)
    ========================================== */
+
 .start-menu {
     display: none;
     position: fixed;
-    bottom: 45px;
-    left: 0;
+    bottom: 44px;
+    left: 2px;
     width: 250px;
     max-width: 90vw;
     background: var(--win-bg);
     border: 2px solid;
     border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
-    z-index: 5001;
+    z-index: 8000;
     padding: 2px;
 }
 
@@ -105,7 +115,8 @@ body::before {
     color: var(--win-border-light);
     writing-mode: vertical-rl;
     transform: rotate(180deg);
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: bold;
     letter-spacing: 1px;
     user-select: none;
     font-family: var(--font-vt323);
@@ -118,7 +129,9 @@ body::before {
     flex-direction: column;
 }
 
-.start-menu .content a {
+/* Fix per uniformare link e bottoni nel menu Start in stile Win95 */
+.start-menu .content a,
+.start-menu .content .menu-link-btn {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -126,9 +139,16 @@ body::before {
     text-decoration: none;
     color: var(--win-border-dark);
     font-size: 18px;
+    font-family: var(--font-vt323);
+    background: transparent;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
 }
 
-.start-menu .content a:hover {
+.start-menu .content a:hover,
+.start-menu .content .menu-link-btn:hover {
     background: var(--win-blue);
     color: var(--win-border-light);
 }
@@ -142,7 +162,7 @@ body::before {
 
 .start-menu hr {
     border: none;
-    border-top: 1px solid #808080;
+    border-top: 1px solid var(--win-border-shadow);
     border-bottom: 1px solid var(--win-border-light);
     margin: 4px 1px;
 }
@@ -155,11 +175,10 @@ body::before {
     bottom: 55px;
     width: 280px;
     max-width: calc(100vw - 20px);
-    min-height: 250px;
+    height: 250px;
     background-color: var(--win-bg);
-    border: 2px outset var(--win-border-shadow);
-    border-right-color: var(--win-border-dark);
-    border-bottom-color: var(--win-border-dark);
+    border: 2px solid;
+    border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
     z-index: 4500;
     transform: translateX(-350px);
     transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
@@ -172,6 +191,7 @@ body::before {
 /* ==========================================
    3. TITLES & GRID LAYOUTS
    ========================================== */
+
 .ascii-title {
     text-align: center;
     font-family: var(--font-retro);
@@ -206,7 +226,6 @@ body::before {
     padding: 0 15px;
 }
 
-/* 2-column layout for projects */
 .grid { 
     grid-template-columns: 1fr 1fr; 
     gap: 20px; 
@@ -219,11 +238,12 @@ body::before {
 /* ==========================================
    4. WINDOWS & BUTTON COMPONENTS
    ========================================== */
+
 .window {
     background-color: var(--win-bg);
-    border: 2px outset var(--win-border-shadow);
-    border-right-color: var(--win-border-dark);
-    border-bottom-color: var(--win-border-dark);
+    border: 2px solid;
+    border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
+    box-shadow: 1px 1px 0px var(--win-border-dark);
     font-family: var(--font-vt323);
     display: flex;
     flex-direction: column;
@@ -247,9 +267,8 @@ body::before {
     height: 19px;
     cursor: pointer;
     background: var(--win-bg);
-    border: 2px outset var(--win-border-shadow);
-    border-right-color: var(--win-border-dark);
-    border-bottom-color: var(--win-border-dark);
+    border: 2px solid;
+    border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
     font-size: 14px;
     font-weight: bold;
     color: var(--win-border-dark);
@@ -261,17 +280,20 @@ body::before {
     line-height: 1;
 }
 
-.dot::before { content: '×'; }
+.dot::before { 
+    content: '×'; 
+}
 
 .dot:active {
-    border-style: inset;
+    border-color: var(--win-border-dark) var(--win-border-light) var(--win-border-light) var(--win-border-dark);
+    padding: 1px 0 0 1px;
 }
 
 .content_title {
     padding: 10px 15px 4px;
     font-size: 28px;
     font-family: var(--font-vt323);
-    border-bottom: 2px groove var(--win-border-shadow);
+    border-bottom: 2px groove var(--win-border-light-shadow);
 }
 
 .content_text {
@@ -292,23 +314,23 @@ body::before {
     display: inline-block;
     align-self: flex-start;
     margin: 10px 15px 15px;
-    padding: 6px 14px;
+    padding: 4px 14px;
     color: var(--win-border-dark);
     background: var(--win-bg);
-    border: 2px outset var(--win-border-shadow);
-    border-right-color: var(--win-border-dark);
-    border-bottom-color: var(--win-border-dark);
+    border: 2px solid;
+    border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
     font-size: 18px;
     font-weight: bold;
     text-decoration: none;
     cursor: pointer;
     user-select: none;
     font-family: var(--font-vt323);
+    text-align: center;
 }
 
 .button:active:not(:disabled) {
-    border-style: inset;
-    border-color: var(--win-border-dark) var(--win-border-shadow) var(--win-border-shadow) var(--win-border-dark);
+    border-color: var(--win-border-dark) var(--win-border-light) var(--win-border-light) var(--win-border-dark);
+    padding: 5px 13px 3px 15px;
 }
 
 .link {
@@ -323,7 +345,9 @@ body::before {
     background-color: var(--win-border-light);
 }
 
-.margin-top { margin-top: 40px; }
+.margin-top { 
+    margin-top: 40px; 
+}
 
 .dots::after {
     content: '';
@@ -338,22 +362,18 @@ body::before {
 }
 
 /* ==========================================
-   5. OVERLAY & MODAL DIALOGS
+   5. OVERLAY & DESKTOP WINDOW DIALOGS
    ========================================== */
-#overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: 4000;
-}
 
-#overlay.modal-active { display: block; }
+#overlay {
+    display: none !important;
+}
 
 .modal-window, #help-panel {
     display: none;
-    position: fixed;
-    top: 50%; left: 50%;
+    position: fixed !important;
+    top: 50%; 
+    left: 50%;
     transform: translate(-50%, -50%);
     width: 90%;
     max-width: 750px;
@@ -361,14 +381,32 @@ body::before {
     background-color: var(--win-bg);
     border: 2px solid;
     border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
-    box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.6);
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
     z-index: 4001;
     flex-direction: column;
 }
 
-.draggable-window { position: fixed !important; }
+.modal-window.is-dragging, 
+#help-panel.is-dragging,
+.modal-window.dragged, 
+#help-panel.dragged {
+    transform: none !important;
+}
 
-.modal-window.modal-active, #help-panel.show {
+.modal-window .header {
+    background: var(--win-border-shadow);
+    color: var(--win-bg);
+    cursor: move;
+    user-select: none;
+}
+
+.modal-window.focused .header,
+.sidebar.focused .header {
+    background: linear-gradient(to right, var(--win-blue) 0%, var(--win-blue-light) 100%);
+    color: var(--win-border-light);
+}
+
+.modal-window.active, #help-panel.active {
     display: flex !important;
 }
 
@@ -377,6 +415,7 @@ body::before {
     overflow-y: auto;
     font-size: 20px;
     word-break: break-word;
+    flex: 1;
 }
 
 .modal-body h3 {
@@ -394,16 +433,17 @@ body::before {
 .images {
     width: 100%;
     height: 120px;
-    border: 2px inset var(--win-border-dark);
+    border: 2px inset var(--win-bg);
     object-fit: cover;
 }
 
 /* ==========================================
-   6. COMMENTS SECTION
+   6. COMMENTS SECTION & CHAT LOG
    ========================================== */
+
 .comments-log,
 .comments_log {
-    border-top: 1px solid var(--win-border-dark);
+    border-top: 1px solid var(--win-border-shadow);
     display: flex;
     align-items: center;
     margin-top: 15px;
@@ -414,14 +454,22 @@ body::before {
 .comments-log .input,
 .comments_log .input {
     background: var(--win-border-light);
-    border: 2px inset var(--win-border-dark);
+    border: 2px inset var(--win-bg);
     color: var(--win-border-dark);
     font-family: var(--font-vt323);
-    font-size: 18px; /* Prevents auto-zoom on iOS */
+    font-size: 18px;
     flex-grow: 1;
     padding: 4px 8px;
     outline: none;
     min-width: 0;
+}
+
+#comments-list {
+    max-height: 350px;
+    overflow-y: auto;
+    word-break: break-word;  
+    padding-right: 5px;      
+    margin-bottom: 10px;
 }
 
 .terminal-user {
@@ -457,12 +505,25 @@ body::before {
 .counter {
     padding: 12px;
     font-size: 20px;
-    border: 2px inset var(--win-border-dark);
+    border: 2px inset var(--win-bg);
 }
+
+.role-badge {
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 4px;
+}
+.badge-owner { color: #FF00FF; }
+.badge-admin { color: #FF3333; }
+.badge-mod   { color: #00a844; }
+.badge-vip   { color: #d97706; }
+.badge-user  { color: #0040ff; }
+.badge-guest { color: #888888; }
 
 /* ==========================================
    7. DESKTOP TASKBAR
    ========================================== */
+
 #status-bar {
     display: flex;
     position: fixed;
@@ -472,7 +533,7 @@ body::before {
     height: 42px;
     background: var(--win-bg);
     border-top: 2px solid var(--win-border-light);
-    z-index: 5000;
+    z-index: 7000;
     align-items: center;
     padding: 2px 4px;
     gap: 4px;
@@ -532,22 +593,29 @@ body::before {
     border: 2px solid;
     border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
     cursor: pointer;
+    background: var(--win-bg);
 }
 
 .taskbar-item.active {
     border-color: var(--win-border-dark) var(--win-border-light) var(--win-border-light) var(--win-border-dark);
-    background-color: #B0B0B0;
+    background-color: #E0E0E0;
+    background-image: repeating-linear-gradient(45deg, #CCC 0, #CCC 1px, transparent 0, transparent 50%);
+    background-size: 2px 2px;
 }
 
-.taskbar-item strong, .taskbar-fixed strong { color: var(--win-blue); }
+.taskbar-item strong, .taskbar-fixed strong { 
+    color: var(--win-blue); 
+}
 
-.pad-left { padding-left: 2px; }
+.pad-left { 
+    padding-left: 2px; 
+}
 
 #clock {
     margin-left: auto;
     padding: 2px 10px;
     height: 34px;
-    border: 2px inset var(--win-border-dark);
+    border: 2px inset var(--win-bg);
     display: flex;
     align-items: center;
     font-size: 18px;
@@ -557,21 +625,31 @@ body::before {
 }
 
 /* ==========================================
-   8. TOAST & LOADING ANIMATIONS
+   8. TOAST NOTIFICATIONS & BOOT ANIMATIONS
    ========================================== */
+
+.retro-toast,
 .toast {
     position: fixed;
-    bottom: 52px; right: 15px;
+    bottom: 52px; 
+    right: 15px;
     background: var(--win-bg);
-    border: 2px outset var(--win-border-shadow);
+    border: 2px solid;
+    border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
     padding: 8px 12px;
     font-size: 18px;
-    z-index: 6000;
+    z-index: 9000;
+    opacity: 0;
+    pointer-events: none;
     transition: opacity 0.3s ease;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
 }
 
-.toast.hide { opacity: 0; }
+.retro-toast.show,
+.toast.show { 
+    opacity: 1; 
+    pointer-events: auto;
+}
 
 #loading-screen {
     position: fixed;
@@ -580,7 +658,7 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9999;
+    z-index: 10000;
     transition: opacity 0.4s ease;
 }
 
@@ -588,7 +666,8 @@ body::before {
     width: 360px; 
     max-width: 90vw;
     background: var(--win-bg); 
-    border: 2px outset var(--win-border-shadow); 
+    border: 2px solid; 
+    border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
 }
 
 .loading-content {
@@ -597,13 +676,18 @@ body::before {
     font-size: 20px;
 }
 
-.loading-content p { margin: 0 0 4px 0; opacity: 0; }
+.loading-content p { 
+    margin: 0 0 4px 0; 
+    opacity: 0; 
+}
 
 .loading-bar {
-    width: 100%; height: 20px;
-    border: 2px inset var(--win-border-dark);
+    width: 100%; 
+    height: 20px;
+    border: 2px inset var(--win-bg);
     margin: 10px 0;
     display: none;
+    background: var(--win-border-light);
 }
 
 .loading-progress {
@@ -613,11 +697,16 @@ body::before {
     transition: width 0.3s ease;
 }
 
-#loading-percent { text-align: center; font-weight: bold; display: none; }
+#loading-percent { 
+    text-align: center; 
+    font-weight: bold; 
+    display: none; 
+}
 
 /* ==========================================
    9. USER AUTHENTICATION MODAL STYLES
    ========================================== */
+
 .auth-form-container {
     display: flex;
     flex-direction: column;
@@ -629,6 +718,11 @@ body::before {
 
 .retro-input {
     font-family: var(--font-vt323) !important;
+    background: var(--win-border-light);
+    border: 2px inset var(--win-bg);
+    padding: 4px 8px;
+    font-size: 18px;
+    outline: none;
 }
 
 .save-btn {
@@ -644,7 +738,6 @@ body::before {
    10. MEDIA QUERIES & RESPONSIVENESS
    ========================================== */
 
-/* Large Desktop Screens (> 1200px) */
 @media (min-width: 1200px) {
     body { font-size: 20px; }
     .ascii-title { font-size: 80px; }
@@ -654,27 +747,34 @@ body::before {
     .button { font-size: 20px; }
 }
 
-/* Tablet Layout (768px - 900px) */
 @media (max-width: 900px) {
     .ascii-title { font-size: 48px; }
     .section-title { font-size: 30px; }
 }
 
-/* Mobile Devices (< 600px) */
 @media (max-width: 600px) {
     body { padding-bottom: 50px; }
     
     .grid { 
-        grid-template-columns: 1fr; /* Switch to single column on mobile */
+        grid-template-columns: 1fr;
     }
 
     .ascii-title { font-size: 32px; text-shadow: 2px 2px 0px #333; }
     .section-title { font-size: 26px; margin: 25px auto 10px; }
 
-    .modal-window, #help-panel {
-        width: 95%;
-        max-height: calc(100vh - 60px);
-        top: 45%;
+    .modal-window, #help-panel, .sidebar {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 94% !important;
+        max-width: none !important;
+        max-height: 85vh !important;
+        margin: 0 !important;
+    }
+
+    .header {
+        cursor: default !important;
     }
 
     .modal-body { font-size: 18px; padding: 10px; }
@@ -692,7 +792,6 @@ body::before {
         margin: 8px 15px;
     }
 
-    /* Mobile Taskbar */
     #status-bar {
         height: 42px;
         padding: 2px;
@@ -712,9 +811,7 @@ body::before {
     }
 
     #clock {
-        font-size: 15px;
-        padding: 2px 6px;
-        display: none; /* Hide clock on small screens */
+        display: none;
     }
 
     .gallery {
