@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TPPage</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- Analytics -->
+    <script data-goatcounter="https://tppage.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </head>
 <body>
 
@@ -176,7 +179,7 @@
     <div id="project3-modal" class="window modal-window" aria-hidden="true">
         <div class="header">ibm_pc_case<button class="dot" onclick="closeAllModals()"></button></div>
         <div class="modal-body">
-            <h3>[ PROJECTS: IBM PC case ]</h3>
+            <h3>[ PROJECT: IBM PC case ]</h3>
             <p>&gt; STATUS: Finished</p>
             <p>&gt; DESCRIPTION: ATX case that looks like an IBM PC</p>
             <p>&gt; DOWNLOAD: <a href="projects/ibmpc/ibm_pc.stl" download class="link">ibm_pc.stl</a></p>
@@ -235,12 +238,10 @@
             <img src="icons/win95.png" alt="Start logo" class="start-btn-icon">
             <span>Start</span>
         </button>
-        <div class="taskbar-divider"></div>
         <div class="taskbar-fixed">
             <img src="icons/visits.png" alt="Visits icon" class="tb-icon">
             <span class="pad-left">Visits: <strong id="view-count-tb">0</strong></span>
         </div>
-        <div class="taskbar-divider"></div>
         <div class="taskbar-apps"> 
             <div class="taskbar-item" id="tb-badge-user" onclick="openProject('modal-user', 'tb-badge-user')">
                 <img src="icons/user.png" alt="User icon" class="tb-icon">
@@ -248,7 +249,7 @@
             </div>
             <div class="taskbar-item" id="tb-badge-projects" onclick="openProject('modal-projects', 'tb-badge-projects')">
                 <img src="icons/projects.png" alt="Projects icon" class="tb-icon">
-                <span>Projects: <strong id="project-count">0</strong></span>
+                <span>Projects: <strong id="project-count">4</strong></span>
             </div>
         </div>
         <div id="clock">00:00</div>
@@ -274,7 +275,7 @@
             <button class="dot" onclick="closeAllModals()"></button>
         </div>
         <div class="modal-body">
-            <p><strong>Total Projects:</strong> <span id="modal-total-projects">0</span></p>
+            <p><strong>Total Projects:</strong> <span id="modal-total-projects">4</span></p>
             <hr>
             <p>Browse the site or use the Start Menu to open individual projects in detail.</p>
         </div>

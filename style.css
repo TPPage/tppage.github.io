@@ -1,7 +1,7 @@
 /**
- * ==============================================================================
- * TPPage Stylesheet - Windows 95 Theme & Layouts
- * ==============================================================================
+ * ==========================================================
+ * TPPage Stylesheet - Windows 95 Theme & Layouts 
+ * ==========================================================
  */
 
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
@@ -10,7 +10,7 @@
    1. GLOBAL VARIABLES & RESET
    ========================================== */
 :root {
-    /* Windows 95 System Color Palette */
+    /* Windows 95 System Palette */
     --win-bg: #C0C0C0;
     --win-border-light: #FFFFFF;
     --win-border-dark: #000000;
@@ -18,25 +18,45 @@
     --win-blue: #000080;
     --win-blue-light: #1084D7;
     
-    /* Typography */
-    --font-sans: 'MS Sans Serif', 'MS Shell Dlg', Arial, sans-serif;
-    --font-mono: 'VT323', monospace;
+    /* Typography Constants */
+    --font-vt323: 'VT323', monospace;
+    --font-retro: 'Press Start 2P', monospace;
 }
 
 *, *::before, *::after {
     box-sizing: border-box;
 }
 
+/* Perfect crisp rendering for retro fonts & bitmap aesthetics */
+body, * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-smooth: never;
+    text-rendering: optimizeLegibility;
+}
+
+/* Pixel-perfect image rendering */
+img, canvas, svg, .menu-icon, .start-btn-icon, .tb-icon, .images {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    image-rendering: -moz-crisp-edges;
+}
+
 html {
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
 }
 
 body {
     background-color: #018184;
     background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
-    font-family: var(--font-sans);
+    font-family: var(--font-vt323);
+    font-size: 18px;
+    line-height: 1.2;
     margin: 0;
-    padding: 0 0 50px 0;
+    padding: 0 0 55px 0;
+    color: #000000;
+    overflow-x: hidden;
 }
 
 /* Retro CRT monitor overlay effect */
@@ -55,15 +75,16 @@ body::before {
 .start-menu {
     display: none;
     position: fixed;
-    bottom: 40px;
+    bottom: 45px;
     left: 0;
-    width: 220px;
+    width: 250px;
+    max-width: 90vw;
     background: var(--win-bg);
     border: 2px solid;
     border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
-    z-index: 3001;
-    padding: 1px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+    z-index: 5001;
+    padding: 2px;
 }
 
 .start-menu.active {
@@ -71,26 +92,28 @@ body::before {
 }
 
 .start-menu .sidebar-menu {
-    width: 28px;
+    width: 32px;
     background: linear-gradient(to top, var(--win-blue), var(--win-blue-light));
     display: flex;
     align-items: flex-end;
     justify-content: center;
     padding-bottom: 8px;
+    flex-shrink: 0;
 }
 
 .win-banner-text {
     color: var(--win-border-light);
     writing-mode: vertical-rl;
     transform: rotate(180deg);
-    font-size: 14px;
+    font-size: 18px;
     letter-spacing: 1px;
     user-select: none;
+    font-family: var(--font-vt323);
 }
 
 .start-menu .content {
     flex: 1;
-    padding: 1px;
+    padding: 2px;
     display: flex;
     flex-direction: column;
 }
@@ -98,11 +121,11 @@ body::before {
 .start-menu .content a {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 4px 6px;
+    gap: 10px;
+    padding: 6px 8px;
     text-decoration: none;
     color: var(--win-border-dark);
-    font-size: 12px;
+    font-size: 18px;
 }
 
 .start-menu .content a:hover {
@@ -111,34 +134,35 @@ body::before {
 }
 
 .menu-icon, .start-btn-icon, .tb-icon {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
     object-fit: contain;
-    image-rendering: pixelated;
+    flex-shrink: 0;
 }
 
 .start-menu hr {
     border: none;
     border-top: 1px solid #808080;
     border-bottom: 1px solid var(--win-border-light);
-    margin: 3px 1px;
+    margin: 4px 1px;
 }
 
 .sidebar {
-    font-family: var(--font-sans);
-    font-size: 11px;
+    font-family: var(--font-vt323);
+    font-size: 18px;
     position: fixed;
-    left: 20px;
-    bottom: 50px;
+    left: 10px;
+    bottom: 55px;
     width: 280px;
-    min-height: 300px;
+    max-width: calc(100vw - 20px);
+    min-height: 250px;
     background-color: var(--win-bg);
     border: 2px outset var(--win-border-shadow);
     border-right-color: var(--win-border-dark);
     border-bottom-color: var(--win-border-dark);
-    z-index: 2000;
+    z-index: 4500;
     transform: translateX(-350px);
-    transition: transform 0.3s ease-in-out;
+    transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
 }
 
 .sidebar.active {
@@ -150,39 +174,47 @@ body::before {
    ========================================== */
 .ascii-title {
     text-align: center;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 72px;
+    font-family: var(--font-retro);
+    font-size: 64px;
     color: var(--win-border-light);
-    text-shadow: 4px 4px 0px #333333, 8px 8px 0px #1a1a1a;
-    padding: 20px 0 30px;
+    text-shadow: 4px 4px 0px #333333, 7px 7px 0px #1a1a1a;
+    padding: 25px 10px 15px;
     margin: 0 auto;
-    width: 90%;
-    max-width: 1100px;
+    width: 100%;
+    word-break: break-word;
 }
 
 .section-title {
     text-align: center;
-    font-family: var(--font-mono);
-    font-size: 28px;
+    font-family: var(--font-vt323);
+    font-size: 36px;
     color: var(--win-border-light);
     letter-spacing: 2px;
-    margin: 40px auto 20px;
+    margin: 35px auto 15px;
     text-shadow: 2px 2px 0px var(--win-border-dark);
 }
 
 #projects, #about, #contact, #comments {
-    scroll-margin-top: 30px;
+    scroll-margin-top: 20px;
 }
 
 .grid, .grid1 {
     display: grid;
-    max-width: 1200px;
-    margin: 0 auto 50px;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto 30px;
     padding: 0 15px;
 }
 
-.grid { grid-template-columns: 1fr 1fr; gap: 25px; }
-.grid1 { grid-template-columns: 1fr; }
+/* 2-column layout for projects */
+.grid { 
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px; 
+}
+
+.grid1 { 
+    grid-template-columns: 1fr; 
+}
 
 /* ==========================================
    4. WINDOWS & BUTTON COMPONENTS
@@ -192,7 +224,9 @@ body::before {
     border: 2px outset var(--win-border-shadow);
     border-right-color: var(--win-border-dark);
     border-bottom-color: var(--win-border-dark);
-    font-family: var(--font-sans);
+    font-family: var(--font-vt323);
+    display: flex;
+    flex-direction: column;
 }
 
 .header {
@@ -200,66 +234,76 @@ body::before {
     align-items: center;
     justify-content: space-between;
     background: linear-gradient(to right, var(--win-blue) 0%, var(--win-blue-light) 100%);
-    padding: 2px 4px;
+    padding: 3px 6px;
     color: var(--win-border-light);
-    font-size: 12px;
+    font-size: 18px;
     font-weight: bold;
     user-select: none;
     cursor: move;
 }
 
-/* Window close button */
 .dot {
-    width: 16px;
-    height: 15px;
+    width: 20px;
+    height: 19px;
     cursor: pointer;
     background: var(--win-bg);
     border: 2px outset var(--win-border-shadow);
     border-right-color: var(--win-border-dark);
     border-bottom-color: var(--win-border-dark);
-    font-size: 10px;
+    font-size: 14px;
     font-weight: bold;
     color: var(--win-border-dark);
     display: flex;
     align-items: center;
     justify-content: center;
+    user-select: none;
+    padding: 0;
+    line-height: 1;
 }
 
-.dot::before { content: '×'; font-size: 12px; }
+.dot::before { content: '×'; }
+
+.dot:active {
+    border-style: inset;
+}
 
 .content_title {
-    padding: 12px 15px 4px;
-    font-size: 22px;
-    font-family: var(--font-mono);
+    padding: 10px 15px 4px;
+    font-size: 28px;
+    font-family: var(--font-vt323);
     border-bottom: 2px groove var(--win-border-shadow);
 }
 
-.content_text, .about_me {
-    padding: 10px 15px;
-    font-size: 11px;
+.content_text {
+    padding: 12px 15px;
+    font-size: 20px;
     color: var(--win-border-dark);
+    word-break: break-word;
 }
 
 .about_me {
-    font-family: var(--font-mono);
-    font-size: 15px;
+    padding: 12px 15px;
+    font-family: var(--font-vt323);
+    font-size: 20px;
+    color: var(--win-border-dark);
 }
 
-/* Win95 Raised/Pressed Button Effect */
 .button {
     display: inline-block;
-    margin: 15px;
-    padding: 4px 12px;
+    align-self: flex-start;
+    margin: 10px 15px 15px;
+    padding: 6px 14px;
     color: var(--win-border-dark);
     background: var(--win-bg);
     border: 2px outset var(--win-border-shadow);
     border-right-color: var(--win-border-dark);
     border-bottom-color: var(--win-border-dark);
-    font-size: 11px;
+    font-size: 18px;
     font-weight: bold;
     text-decoration: none;
     cursor: pointer;
     user-select: none;
+    font-family: var(--font-vt323);
 }
 
 .button:active:not(:disabled) {
@@ -271,6 +315,7 @@ body::before {
     text-decoration: underline;
     color: var(--win-blue);
     cursor: pointer;
+    word-break: break-all;
 }
 
 .link:hover {
@@ -278,9 +323,8 @@ body::before {
     background-color: var(--win-border-light);
 }
 
-.margin-top { margin-top: 60px; }
+.margin-top { margin-top: 40px; }
 
-/* Animated loading dots */
 .dots::after {
     content: '';
     animation: dots-animation 2s infinite;
@@ -300,7 +344,7 @@ body::before {
     display: none;
     position: fixed;
     inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.4);
     z-index: 4000;
 }
 
@@ -313,11 +357,11 @@ body::before {
     transform: translate(-50%, -50%);
     width: 90%;
     max-width: 750px;
-    max-height: 85vh;
+    max-height: 80vh;
     background-color: var(--win-bg);
     border: 2px solid;
     border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.6);
     z-index: 4001;
     flex-direction: column;
 }
@@ -331,63 +375,88 @@ body::before {
 .modal-body {
     padding: 15px;
     overflow-y: auto;
-    max-height: calc(85vh - 40px);
-    font-size: 12px;
+    font-size: 20px;
+    word-break: break-word;
+}
+
+.modal-body h3 {
+    margin-top: 0;
+    font-size: 22px;
 }
 
 .gallery {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
 }
 
 .images {
-    width: 200px;
-    height: 150px;
-    border: 1px solid var(--win-border-dark);
+    width: 100%;
+    height: 120px;
+    border: 2px inset var(--win-border-dark);
     object-fit: cover;
 }
 
 /* ==========================================
    6. COMMENTS SECTION
    ========================================== */
+.comments-log,
 .comments_log {
     border-top: 1px solid var(--win-border-dark);
     display: flex;
     align-items: center;
     margin-top: 15px;
-    padding: 5px;
+    padding: 8px;
+    gap: 8px;
 }
 
-.input {
+.comments-log .input,
+.comments_log .input {
     background: var(--win-border-light);
     border: 2px inset var(--win-border-dark);
     color: var(--win-border-dark);
-    font-size: 11px;
+    font-family: var(--font-vt323);
+    font-size: 18px; /* Prevents auto-zoom on iOS */
     flex-grow: 1;
-    padding: 4px;
+    padding: 4px 8px;
     outline: none;
+    min-width: 0;
 }
 
 .terminal-user {
-    font-family: var(--font-mono);
-    font-size: 15px;
-    padding: 0 8px;
+    font-family: var(--font-vt323);
+    font-size: 20px;
+    white-space: nowrap;
 }
 
+.comments-item,
 .comment-item {
-    margin-bottom: 6px;
-    font-size: 11px;
+    margin-bottom: 8px;
+    font-size: 18px;
+    line-height: 1.3;
 }
 
-.comment-date { color: #666666; }
-.comment-author { color: var(--win-blue); font-weight: bold; }
-.comment-text { color: var(--win-border-dark); }
+.comments-date,
+.comment-date { 
+    color: #555555; 
+}
 
+.comments-author,
+.comment-author { 
+    color: var(--win-blue); 
+    font-weight: bold; 
+}
+
+.comments-text,
+.comment-text { 
+    color: var(--win-border-dark); 
+}
+
+.comments-counter,
 .counter {
-    padding: 10px;
-    font-size: 11px;
+    padding: 12px;
+    font-size: 20px;
     border: 2px inset var(--win-border-dark);
 }
 
@@ -397,29 +466,35 @@ body::before {
 #status-bar {
     display: flex;
     position: fixed;
-    bottom: 0; left: 0; width: 100%; height: 40px;
+    bottom: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 42px;
     background: var(--win-bg);
     border-top: 2px solid var(--win-border-light);
-    z-index: 3000;
+    z-index: 5000;
     align-items: center;
     padding: 2px 4px;
-    gap: 6px;
-    font-size: 11px;
+    gap: 4px;
+    font-size: 18px;
 }
 
 .taskbar-start {
-    width: 80px;
-    height: 32px;
+    width: 95px;
+    height: 34px;
     background: var(--win-bg);
     border: 2px solid;
     border-color: var(--win-border-light) var(--win-border-dark) var(--win-border-dark) var(--win-border-light);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 6px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 18px;
+    font-family: var(--font-vt323);
+    user-select: none;
+    flex-shrink: 0;
 }
 
 .taskbar-start:active, .taskbar-start[aria-expanded="true"] {
@@ -427,16 +502,30 @@ body::before {
     background-color: #B0B0B0;
 }
 
-.taskbar-apps { display: flex; gap: 4px; height: 100%; }
+.taskbar-apps { 
+    display: flex; 
+    gap: 4px; 
+    height: 100%; 
+    flex: 1;
+    overflow-x: auto;
+    scrollbar-width: none;
+    align-items: center;
+}
+
+.taskbar-apps::-webkit-scrollbar {
+    display: none;
+}
 
 .taskbar-item, .taskbar-fixed {
     display: flex;
     align-items: center;
     gap: 6px;
     padding: 2px 8px;
-    height: 32px;
-    font-size: 14px;
+    height: 34px;
+    font-size: 18px;
     white-space: nowrap;
+    user-select: none;
+    flex-shrink: 0;
 }
 
 .taskbar-item {
@@ -452,16 +541,19 @@ body::before {
 
 .taskbar-item strong, .taskbar-fixed strong { color: var(--win-blue); }
 
-.pad-left { padding-left: 4px; }
+.pad-left { padding-left: 2px; }
 
 #clock {
     margin-left: auto;
-    padding: 3px 8px;
-    height: 32px;
+    padding: 2px 10px;
+    height: 34px;
     border: 2px inset var(--win-border-dark);
     display: flex;
     align-items: center;
-    font-size: 14px;
+    font-size: 18px;
+    user-select: none;
+    flex-shrink: 0;
+    background: var(--win-bg);
 }
 
 /* ==========================================
@@ -469,13 +561,14 @@ body::before {
    ========================================== */
 .toast {
     position: fixed;
-    bottom: 50px; right: 20px;
+    bottom: 52px; right: 15px;
     background: var(--win-bg);
     border: 2px outset var(--win-border-shadow);
     padding: 8px 12px;
-    font-size: 11px;
+    font-size: 18px;
     z-index: 6000;
     transition: opacity 0.3s ease;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .toast.hide { opacity: 0; }
@@ -491,18 +584,23 @@ body::before {
     transition: opacity 0.4s ease;
 }
 
-#loading-window { width: 350px; background: var(--win-bg); border: 2px outset var(--win-border-shadow); }
+#loading-window { 
+    width: 360px; 
+    max-width: 90vw;
+    background: var(--win-bg); 
+    border: 2px outset var(--win-border-shadow); 
+}
 
 .loading-content {
     padding: 15px;
-    font-family: var(--font-mono);
-    font-size: 15px;
+    font-family: var(--font-vt323);
+    font-size: 20px;
 }
 
 .loading-content p { margin: 0 0 4px 0; opacity: 0; }
 
 .loading-bar {
-    width: 100%; height: 16px;
+    width: 100%; height: 20px;
     border: 2px inset var(--win-border-dark);
     margin: 10px 0;
     display: none;
@@ -520,13 +618,81 @@ body::before {
 /* ==========================================
    9. MEDIA QUERIES & RESPONSIVENESS
    ========================================== */
-@media (max-width: 900px) {
-    .grid { grid-template-columns: 1fr; }
-    .ascii-title { font-size: 32px; }
-    .images { width: 100%; height: auto; }
+
+/* Large Desktop Screens (> 1200px) */
+@media (min-width: 1200px) {
+    body { font-size: 20px; }
+    .ascii-title { font-size: 80px; }
+    .section-title { font-size: 42px; }
+    .content_title { font-size: 32px; }
+    .content_text, .modal-body, .about_me { font-size: 22px; }
+    .button { font-size: 20px; }
 }
 
-@media (max-width: 480px) {
-    .ascii-title, .section-title { font-size: 20px; }
-    #status-bar { display: none !important; }
+/* Tablet Layout (768px - 900px) */
+@media (max-width: 900px) {
+    .ascii-title { font-size: 48px; }
+    .section-title { font-size: 30px; }
+}
+
+/* Mobile Devices (< 600px) */
+@media (max-width: 600px) {
+    body { padding-bottom: 50px; }
+    
+    .grid { 
+        grid-template-columns: 1fr; /* Switch to single column on mobile */
+    }
+
+    .ascii-title { font-size: 32px; text-shadow: 2px 2px 0px #333; }
+    .section-title { font-size: 26px; margin: 25px auto 10px; }
+
+    .modal-window, #help-panel {
+        width: 95%;
+        max-height: calc(100vh - 60px);
+        top: 45%;
+    }
+
+    .modal-body { font-size: 18px; padding: 10px; }
+    
+    .comments-log, .comments_log {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .terminal-user { display: none; }
+
+    .button {
+        width: calc(100% - 30px);
+        text-align: center;
+        margin: 8px 15px;
+    }
+
+    /* Mobile Taskbar */
+    #status-bar {
+        height: 42px;
+        padding: 2px;
+    }
+
+    .taskbar-start {
+        width: 75px;
+        font-size: 16px;
+        padding: 0 4px;
+    }
+
+    .taskbar-fixed { display: none; }
+
+    .taskbar-item {
+        font-size: 15px;
+        padding: 2px 6px;
+    }
+
+    #clock {
+        font-size: 15px;
+        padding: 2px 6px;
+        display: none; /* Hide clock on small screens */
+    }
+
+    .gallery {
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    }
 }

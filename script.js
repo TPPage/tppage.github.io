@@ -7,11 +7,22 @@
 // ==========================================
 // 1. CONFIGURATION & GLOBAL STATE
 // ==========================================
+
+/**
+ * Unique identifier for anonymous sessions.
+ * @type {string}
+ */
 const GUEST_NAME = `guest_${Math.floor(Math.random() * 899 + 100)}`;
+
+/**
+ * Global counter tracking highest window z-index layer.
+ * @type {number}
+ */
 let highestZIndex = 4001;
 
 /**
- * Cache for essential UI elements to avoid repeated DOM queries.
+ * Cache for primary structural UI elements to minimize DOM lookups.
+ * @type {Object.<string, Function>}
  */
 const DOM = {
     overlay: () => document.getElementById('overlay'),
@@ -25,8 +36,8 @@ const DOM = {
 // ==========================================
 
 /**
- * Brings a target HTML element to the foreground by incrementing z-index.
- * @param {HTMLElement} element - The window/panel to bring to front.
+ * Promotes a specified window/dialog element to top z-index layer.
+ * @param {HTMLElement|null} element - Target element to focus.
  */
 function bringToFront(element) {
     if (!element) return;
@@ -34,7 +45,7 @@ function bringToFront(element) {
 }
 
 /**
- * Toggles the Explorer sidebar navigation panel.
+ * Toggles visibility state of Explorer sidebar panel.
  */
 function toggleExplorer() {
     const win = DOM.explorer();
@@ -44,9 +55,9 @@ function toggleExplorer() {
 }
 
 /**
- * Opens a project modal window and highlights its taskbar badge.
- * @param {string} modalId - The DOM ID of the modal to open.
- * @param {string|null} badgeId - Optional taskbar badge ID to activate.
+ * Displays modal dialog and activates related taskbar indicators.
+ * @param {string} modalId - ID of target modal dialog element.
+ * @param {string|null} [badgeId=null] - Optional taskbar element ID to trigger active status.
  */
 function openProject(modalId, badgeId = null) {
     const modal = document.getElementById(modalId);
@@ -59,42 +70,44 @@ function openProject(modalId, badgeId = null) {
         modal.setAttribute('aria-hidden', 'false');
         bringToFront(modal);
         
-        // Auto-detect or activate explicit taskbar item
         const badge = badgeId ? document.getElementById(badgeId) : document.querySelector(`[onclick*="${modalId}"].taskbar-item`);
         badge?.classList.add('active');
 
-        // Set focus on close button for keyboard accessibility
         modal.querySelector('.dot')?.focus();
     }
 }
 
 /**
- * Closes all active modal windows and resets taskbar states.
+ * Dismisses all modal dialog windows and resets taskbar states.
  */
 function closeAllModals() {
     DOM.overlay()?.classList.remove('modal-active');
     
-    document.querySelectorAll('.modal-window.modal-active').forEach(m => {
-        m.classList.remove('modal-active');
-        m.setAttribute('aria-hidden', 'true');
+    document.querySelectorAll('.modal-window.modal-active').forEach(modal => {
+        modal.classList.remove('modal-active');
+        modal.setAttribute('aria-hidden', 'true');
+        // Reset manual position styles applied during dragging
+        modal.style.left = '';
+        modal.style.top = '';
+        modal.style.transform = '';
     });
 
-    document.querySelectorAll('.taskbar-item.active').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.taskbar-item.active').forEach(badge => badge.classList.remove('active'));
 }
 
 /**
- * Toggles the retro Help Panel (F1).
+ * Toggles system help overlay panel visibility.
  */
 function toggleHelpPanel() {
     const help = DOM.helpPanel();
     if (!help) return;
     const isShown = help.classList.toggle('show');
-    help.setAttribute('aria-hidden', !isShown);
+    help.setAttribute('aria-hidden', String(!isShown));
     if (isShown) bringToFront(help);
 }
 
 /**
- * Toggles the Windows 95 Start Menu visibility and ARIA attributes.
+ * Toggles retro Start Menu expansion state.
  */
 function toggleStartMenu() {
     const menu = DOM.startMenu();
@@ -102,8 +115,8 @@ function toggleStartMenu() {
     if (!menu) return;
     
     const isActive = menu.classList.toggle('active');
-    menu.setAttribute('aria-hidden', !isActive);
-    btn?.setAttribute('aria-expanded', isActive);
+    menu.setAttribute('aria-hidden', String(!isActive));
+    btn?.setAttribute('aria-expanded', String(isActive));
 }
 
 // ==========================================
@@ -111,7 +124,7 @@ function toggleStartMenu() {
 // ==========================================
 
 /**
- * Initializes click-and-drag functionality for window headers.
+ * Registers drag handlers on headers for movable window containers.
  */
 function makeWindowsDraggable() {
     document.querySelectorAll('.modal-window, #help-panel, .sidebar').forEach(win => {
@@ -119,13 +132,14 @@ function makeWindowsDraggable() {
         if (!header) return;
 
         let isDragging = false;
-        let startX, startY, initialLeft, initialTop;
+        let startX = 0;
+        let startY = 0;
+        let initialLeft = 0;
+        let initialTop = 0;
 
-        // Bring window to front on direct click
         win.addEventListener('mousedown', () => bringToFront(win));
 
         header.addEventListener('mousedown', (e) => {
-            // Prevent dragging when clicking control buttons
             if (e.target.classList.contains('dot')) return;
 
             isDragging = true;
@@ -137,7 +151,6 @@ function makeWindowsDraggable() {
             initialLeft = rect.left;
             initialTop = rect.top;
 
-            // Remove transform centering to allow pixel positioning
             win.style.transform = 'none';
             win.style.left = `${initialLeft}px`;
             win.style.top = `${initialTop}px`;
@@ -164,11 +177,17 @@ function makeWindowsDraggable() {
 // 4. COMMENTS SYSTEM (GOOGLE SHEETS BACKEND)
 // ==========================================
 
+/**
+ * Controller service managing backend integration for comments.
+ * @namespace
+ */
 const CommentsManager = {
+    /** @type {string} */
     apiUrl: "https://script.google.com/macros/s/AKfycbzAr3vWOsFtXcAjdicrC3x2TttgHEqYxAq8R730g2wuOpmBd7D7rFWv4i78c8z6L5SO/exec",
 
     /**
-     * Fetches public comments from backend and renders them to the UI.
+     * Fetches stored comments from remote service and injects markup.
+     * @async
      */
     async load() {
         const container = document.getElementById('listaCommenti');
@@ -180,7 +199,6 @@ const CommentsManager = {
             
             container.innerHTML = ""; 
         
-            // Render comments in reverse chronological order
             data.reverse().forEach(([dateIso, author = "anon", text]) => {
                 if (!text) return;
 
@@ -203,7 +221,8 @@ const CommentsManager = {
     },
 
     /**
-     * Posts a new comment to Google Apps Script endpoint.
+     * Submits current comment input payload to backend service.
+     * @async
      */
     async send() {
         const input = document.getElementById('commento');
@@ -242,32 +261,33 @@ const CommentsManager = {
 };
 
 // ==========================================
-// 5. VISITOR COUNTER SERVICE
+// 5. VISITOR COUNTER SERVICE - GOATCOUNTER
 // ==========================================
 
 /**
- * Updates page counter using a CORS proxy and counterapi.dev service.
+ * Polls proxy endpoint to update page view elements.
+ * @async
  */
 async function updateViewCounter() {
-    const proxy = "https://corsproxy.io/?";
-    const baseUrl = "https://api.counterapi.dev/v2/tiagos-team-1-2933/vistor-count";
-    const sessionActive = sessionStorage.getItem('visited_tppage');
-    const apiUrl = `${baseUrl}${sessionActive ? "" : "/up"}?t=${Date.now()}`;
+    const proxyUrl = "https://goatcounter.tiagosprojectspage.workers.dev/api/visits";
 
     try {
-        const res = await fetch(proxy + encodeURIComponent(apiUrl));
-        const json = await res.json();
-        const count = json.data?.up_count;
+        const res = await fetch(`${proxyUrl}?t=${Date.now()}`, { cache: "no-store" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        if (count !== undefined) {
-            ['view-count', 'view-count-tb'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.innerText = count;
-            });
-            if (!sessionActive) sessionStorage.setItem('visited_tppage', 'true');
-        }
-    } catch (e) {
-        console.error("Counter sync error:", e);
+        const data = await res.json();
+        const count = data.total ?? data.count ?? data.visits ?? data.pageviews ?? data.value;
+
+        if (count === undefined || count === null) throw new Error("Visit count missing from response");
+
+        ["view-count", "view-count-tb"].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = Number(count).toLocaleString("it-IT");
+            }
+        });
+    } catch (error) {
+        console.error("Failed to fetch visitor count:", error);
     }
 }
 
@@ -276,7 +296,7 @@ async function updateViewCounter() {
 // ==========================================
 
 /**
- * Updates status bar clock display.
+ * Synchronizes real-time status bar clock widget.
  */
 function updateClock() {
     const clock = document.getElementById('clock');
@@ -286,9 +306,9 @@ function updateClock() {
 }
 
 /**
- * Displays a temporary toast message at bottom right.
- * @param {string} message - Text to show in notification.
- * @param {number} duration - Display time in milliseconds.
+ * Triggers transient notification banner overlay.
+ * @param {string} message - Content string for toast popup.
+ * @param {number} [duration=3000] - Lifespan in milliseconds.
  */
 function showToast(message, duration = 3000) {
     const toast = document.createElement('div');
@@ -307,7 +327,8 @@ function showToast(message, duration = 3000) {
 // ==========================================
 
 /**
- * Simulates a command-line loading screen with typewriter effect.
+ * Renders loading screen boot process sequence.
+ * @async
  */
 async function typeWriterEffect() {
     const loadingScreen = document.getElementById('loading-screen');
@@ -318,7 +339,6 @@ async function typeWriterEffect() {
 
     const delay = ms => new Promise(r => setTimeout(r, ms));
 
-    // Reveal text lines sequentially
     for (const line of lines) {
         if (line.classList.contains('loading-bar') || line.id === 'loading-percent') continue;
         line.style.opacity = '1';
@@ -328,14 +348,12 @@ async function typeWriterEffect() {
     if (loadingBar) loadingBar.style.display = 'block';
     if (loadingPercent) loadingPercent.style.display = 'block';
 
-    // Step-by-step progress bar animation
     for (const step of [0, 45, 85, 100]) {
         if (loadingProgress) loadingProgress.style.width = `${step}%`;
         if (loadingPercent) loadingPercent.innerText = `${step}%`;
         await delay(300);
     }
 
-    // Hide boot screen
     if (loadingScreen) {
         loadingScreen.style.opacity = '0';
         await delay(400);
@@ -356,39 +374,34 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => CommentsManager.load(), 30000);
     makeWindowsDraggable();
 
-    // Set guest ID across interface
     ['display-user-id', 'modal-user-name'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.innerText = GUEST_NAME;
     });
 
-    // Count and update active projects display
     const projectCount = document.querySelectorAll('#projects .window').length;
     ['project-count', 'modal-total-projects'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.innerText = projectCount;
+        if (el) el.innerText = String(projectCount);
     });
 
-    // Handle comment submit via Enter key
     document.getElementById('commento')?.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') CommentsManager.send();
     });
 
-    // Start Menu Explorer action
     document.getElementById('open-explorer')?.addEventListener('click', (e) => {
         e.preventDefault();
         toggleExplorer();
         toggleStartMenu();
     });
 
-    // Delayed view counter fetch
     setTimeout(() => {
         updateViewCounter();
         setInterval(updateViewCounter, 30000);
     }, 2000);
 });
 
-// Global keyboard shortcuts (ESC to close, F1 for Help)
+// System Keyboard Shortcuts
 document.addEventListener('keydown', (e) => {
     if (e.key === "Escape") {
         DOM.startMenu()?.classList.remove('active');
@@ -402,7 +415,7 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Close UI popups when clicking outside their area
+// Click Outside Handlers
 document.addEventListener('click', (e) => {
     const menu = DOM.startMenu();
     const btn = document.getElementById('start-btn');
