@@ -2,9 +2,6 @@
 
 A retro Windows 95-styled personal portfolio and project showcase website built with HTML, CSS, JavaScript, and Firebase.
 
-![License](https://img.shields.io/github/license/TPPage/tppage.github.io?color=blue)
-![Stars](https://img.shields.io/github/stars/TPPage/tppage.github.io)
-
 ## 🌐 Live Demo
 
 Visit the site live here: [tppage.github.io](https://tppage.github.io)
@@ -46,7 +43,6 @@ TPPage is my personal portfolio website where I host and share my programming pr
 
 **Tiago (TGLabsOfficial)**
 - GitHub: [@TGLabsOfficial](https://github.com/TGLabsOfficial)
-- Instagram: [@tiago_kronyte_](https://www.instagram.com/tiago_kronyte_/)
 
 ---
 
