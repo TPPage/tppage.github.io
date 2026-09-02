@@ -276,7 +276,7 @@ body::before {
 
 .content_text {
     padding: 12px 15px;
-    font-size: 20px;
+    font-size: 18px;
     color: var(--win-border-dark);
     word-break: break-word;
 }
@@ -616,7 +616,32 @@ body::before {
 #loading-percent { text-align: center; font-weight: bold; display: none; }
 
 /* ==========================================
-   9. MEDIA QUERIES & RESPONSIVENESS
+   9. USER AUTHENTICATION MODAL STYLES
+   ========================================== */
+.auth-form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+    margin-bottom: 12px;
+    font-family: var(--font-vt323);
+}
+
+.retro-input {
+    font-family: var(--font-vt323) !important;
+}
+
+.save-btn {
+    margin: 4px 0 0 0 !important;
+}
+
+.auth-note {
+    font-size: 13px !important;
+    opacity: 0.8;
+}
+
+/* ==========================================
+   10. MEDIA QUERIES & RESPONSIVENESS
    ========================================== */
 
 /* Large Desktop Screens (> 1200px) */

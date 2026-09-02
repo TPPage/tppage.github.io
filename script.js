@@ -76,7 +76,7 @@ function setUsername(newUsername, password) {
     // Check if the username is already registered in local database
     if (db[cleanName]) {
         if (db[cleanName] !== cleanPass) {
-            showToast('[ERROR] Invalid password for this nickname!');
+            showToast('[ERROR] Invalid password for this nickname! [The nickname might be in use]');
             return false;
         }
     } else {
@@ -282,45 +282,56 @@ function makeWindowsDraggable() {
 }
 
 // ==========================================
-// 4. COMMENTS SYSTEM (GOOGLE SHEETS BACKEND)
+// 4. COMMENTS SYSTEM (FIREBASE REALTIME BACKEND)
 // ==========================================
 
 /**
- * Controller service managing backend integration for comments.
- * @typedef {Object} CommentsManager
- * @property {string} apiUrl - Endpoint URL for the backend App Script service.
- * @property {function(): Promise<void>} load - Fetches and renders existing comments.
- * @property {function(): Promise<void>} send - Submits a new comment payload.
+ * Controller service managing backend integration for comments using Cloud Firestore.
  */
-
-/** @type {CommentsManager} */
 const CommentsManager = {
-    /** @type {string} */
-    apiUrl: "https://script.google.com/macros/s/AKfycbzAr3vWOsFtXcAjdicrC3x2TttgHEqYxAq8R730g2wuOpmBd7D7rFWv4i78c8z6L5SO/exec",
+    /**
+     * Initializes the real-time listener once Firebase is loaded globally.
+     * @returns {void}
+     */
+    init() {
+        const checkFB = setInterval(() => {
+            if (window.db && window.fbFS) {
+                clearInterval(checkFB);
+                this.listenForComments();
+            }
+        }, 100);
+    },
 
     /**
-     * Fetches stored comments from remote service and injects markup into DOM.
-     * @async
-     * @returns {Promise<void>}
+     * Subscribes to Cloud Firestore collection updates in real time.
+     * @returns {void}
      */
-    async load() {
+    listenForComments() {
         const container = document.getElementById('listaCommenti');
         if (!container) return;
 
-        try {
-            const res = await fetch(this.apiUrl);
-            /** @type {Array<[string, string, string]>} */
-            const data = await res.json();
-            
-            container.innerHTML = ""; 
-        
-            data.reverse().forEach(([dateIso, author = "anon", text]) => {
-                if (!text) return;
+        const { collection, query, orderBy, limit, onSnapshot } = window.fbFS;
+        const commentsRef = collection(window.db, 'comments');
+        const q = query(commentsRef, orderBy('timestamp', 'desc'), limit(50));
 
-                const formattedDate = new Date(dateIso).toLocaleString('en-US', {
+        onSnapshot(q, (snapshot) => {
+            container.innerHTML = "";
+
+            if (snapshot.empty) {
+                container.innerHTML = "<p>No comments yet. Be the first!</p>";
+                return;
+            }
+
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const dateObj = data.timestamp ? data.timestamp.toDate() : new Date();
+                const formattedDate = dateObj.toLocaleString('en-US', {
                     day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
                 });
-        
+
+                const author = data.author || "anon";
+                const text = data.text || "";
+
                 const div = document.createElement('div');
                 div.className = 'comments-item';
                 div.innerHTML = `
@@ -330,13 +341,14 @@ const CommentsManager = {
                 `;
                 container.appendChild(div);
             });
-        } catch (e) {
-            console.error("Failed to load comments:", e);
-        }
+        }, (error) => {
+            console.error("Firestore listener error:", error);
+            container.innerHTML = "<p>[ERROR] Failed to load comments</p>";
+        });
     },
 
     /**
-     * Submits current comment input payload to backend service using current user nickname.
+     * Submits current comment input payload to Cloud Firestore.
      * @async
      * @returns {Promise<void>}
      */
@@ -346,27 +358,34 @@ const CommentsManager = {
         const text = input?.value.trim();
 
         if (!text || !sendBtn) return;
-        
+
+        if (!window.db || !window.fbFS) {
+            showToast('[ERROR] Firebase not connected');
+            return;
+        }
+
         sendBtn.disabled = true;
         const originalText = sendBtn.innerText;
         sendBtn.innerText = "[SENDING...]";
-      
-        const formData = new FormData();
-        formData.append("testo", text); 
-        formData.append("autore", CURRENT_USER); 
-      
+
         try {
-            await fetch(this.apiUrl, { method: "POST", mode: "no-cors", body: formData });
+            const { collection, addDoc } = window.fbFS;
+            await addDoc(collection(window.db, 'comments'), {
+                text: text,
+                author: CURRENT_USER,
+                timestamp: new Date()
+            });
+
             input.value = "";
             showToast('[INFO] Comment posted successfully');
             sendBtn.innerText = "[OK]";
             setTimeout(() => {
                 sendBtn.innerText = originalText;
                 sendBtn.disabled = false;
-            }, 1500);
-            this.load(); 
+            }, 1000);
         } catch (err) {
             console.error("Failed to post comment:", err);
+            showToast('[ERROR] Could not send message');
             sendBtn.innerText = "[ERROR]";
             setTimeout(() => {
                 sendBtn.innerText = originalText;
@@ -511,8 +530,7 @@ async function typeWriterEffect() {
 document.addEventListener('DOMContentLoaded', () => {
     typeWriterEffect();
     initEmailObfuscation();
-    CommentsManager.load();
-    setInterval(() => CommentsManager.load(), 30000);
+    CommentsManager.init();
     makeWindowsDraggable();
 
     // Synchronize UI elements with current username state

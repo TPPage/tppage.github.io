@@ -120,30 +120,29 @@
     <!-- ABOUT SECTION -->
     <h2 class="section-title" id="about">&lt;- About Me -&gt;</h2>
 
-<section class="grid1">
-    <div class="window">
-        <div class="header">About Me<button class="dot" aria-label="Close window"></button></div>
-        <div class="about_me">
+    <section class="grid1">
+        <div class="window">
+            <div class="header">About Me<button class="dot" aria-label="Close window"></button></div>
+            <div class="about_me">
 
-            <p><strong>[IDENTITY]</strong></p>
-            <p>User: TGLabsOfficial [Tiago]</p>
-            <p>Occupation: Student</p>
-            <p>Location: Italy</p>
-            <p>OS: Arch Linux</p>
+                <p><strong>[IDENTITY]</strong></p>
+                <p>User: TGLabsOfficial [Tiago]</p>
+                <p>Occupation: Student</p>
+                <p>Location: Italy</p>
+                <p>OS: Arch Linux</p>
 
-            <p><strong>[BIO]</strong></p>
-            <p>I’m a student and a hobbyist programmer. I enjoy learning about programming, computer science, and technology in general. 
-               I enjoy working on small coding projects in my spare time, both for fun and to learn new things.</p>
-            <p>I’m also fascinated by the history of computing.</p>
+                <p><strong>[BIO]</strong></p>
+                <p>I’m a student and a hobbyist programmer. I enjoy learning about programming, computer science, and technology in general. 
+                   I enjoy working on small coding projects in my spare time, both for fun and to learn new things.</p>
+                <p>I’m also fascinated by the history of computing.</p>
 
-            <p><strong>[STATUS]</strong></p>
-            <p>Working on new projects</p>
-            <p>Looking for collaborators: YES</p>
+                <p><strong>[STATUS]</strong></p>
+                <p>Working on new projects</p>
+                <p>Looking for collaborators: YES</p>
 
+            </div>
         </div>
-    </div>
-</section>
-
+    </section>
 
     <!-- CONTACTS SECTION -->
     <h2 class="section-title margin-top" id="contact">&lt;-Contacts-&gt;</h2>
@@ -270,29 +269,29 @@
 
     <!-- USER INFORMATION MODAL -->
     <div id="modal-user" class="window modal-window" aria-hidden="true">
-    <div class="header">
-        <span>User Authentication</span>
-        <button class="dot" onclick="closeAllModals()"></button>
-    </div>
-        <div class="modal-body">
-        <p><strong>Current Nickname:</strong> <span id="modal-user-name">Guest</span></p>
-        
-        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px; margin-bottom: 12px;">
-            <input 
-                type="text" 
-                id="username-input" 
-                class="input" 
-                placeholder="Nickname..." 
-            >
-            <input 
-                type="password" 
-                id="password-input" 
-                class="input" 
-                placeholder="Password / PIN..." 
-            >
-            <button onclick="updateUsername()" class="button" style="margin: 4px 0 0 0;">[SAVE / LOGIN]</button>
+        <div class="header">
+            <span>User Authentication</span>
+            <button class="dot" onclick="closeAllModals()"></button>
         </div>
-        <p style="font-size: 11px; opacity: 0.8;">New nicknames will be registered with the entered password.</p>
+        <div class="modal-body">
+            <p><strong>Current Nickname:</strong> <span id="modal-user-name">Guest</span></p>
+            
+            <div class="auth-form-container">
+                <input
+                    type="text" 
+                    id="username-input" 
+                    class="input comments_log retro-input content_text" 
+                    placeholder="Nickname..." 
+                >
+                <input 
+                    type="password" 
+                    id="password-input" 
+                    class="input comments_log retro-input content_text" 
+                    placeholder="Password / PIN..." 
+                >
+                <button onclick="updateUsername()" class="button save-btn">[SAVE / LOGIN]</button>
+            </div>
+            <p class="auth-note">New nicknames will be registered with the entered password.</p>
         </div>
     </div>
 
@@ -317,9 +316,31 @@
             <p>F1 - Show this help</p>
             <p>ESC - Close windows &amp; sidebar</p>
             <p>TAB - Navigate elements</p>
-            <p>ENTER - Send comment</p>
         </div>
     </div>
+
+    <!-- FIREBASE SDKs (v10 Modular) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+  import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA5Oh4moV-ZMryYp_hXHv3hhz8M3XPdUpE",
+            authDomain: "tppage-github.firebaseapp.com",
+            projectId: "tppage-github",
+            storageBucket: "tppage-github.firebasestorage.app",
+            messagingSenderId: "166943312724",
+            appId: "1:166943312724:web:f0dc01cd7843b3c61496c1"
+    };
+
+        const app = initializeApp(firebaseConfig);
+        window.db = getFirestore(app);
+        window.auth = getAuth(app);
+        window.fbFS = { collection, addDoc, onSnapshot, query, orderBy, limit };
+
+        signInAnonymously(window.auth).catch(err => console.error("Auth error:", err));
+    </script>
 
     <script src="script.js"></script>
 </body>
