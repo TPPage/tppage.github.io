@@ -107,7 +107,8 @@ function hasPermission(requiredLevel) {
  */
 function updateUIUserDisplay() {
     const profile = getCurrentUserProfile();
-    const roleUpper = profile.role.toUpperCase();
+    const roleUpper = profile.role.toUpperCase().trim();
+    const roleLower = profile.role.toLowerCase().trim();
 
     const nameElem = document.getElementById('modal-user-name');
     if (nameElem) nameElem.innerText = currentUser;
@@ -116,7 +117,9 @@ function updateUIUserDisplay() {
     if (roleElem) roleElem.innerText = roleUpper;
 
     const displayUserElem = document.getElementById('display-user-id');
-    if (displayUserElem) displayUserElem.innerText = `${currentUser} [${roleUpper}]`;
+    if (displayUserElem) {
+        displayUserElem.innerHTML = `User: ${currentUser} <span class="role-badge badge-${roleLower}">[${roleUpper}]</span>`;
+    }
 }
 
 /**
