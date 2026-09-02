@@ -108,43 +108,60 @@
         <div class="window">
             <div class="header">work_in_progress<button class="dot" onclick="openProject('project4-modal')"></button></div>
             <div class="content_title">work_in_progress</div>
-            <div class="content_text">tiago@tppage:/$ echo Work in progress...</div>
+            <div class="content_text">C:\TPPage&gt; echo Work in progress...</div>
             <a href="javascript:void(0)" class="button" onclick="openProject('project4-modal')">[VIEW MORE]</a>
         </div>
     </section>
 
     <!-- ABOUT SECTION -->
-    <h2 class="section-title" id="about">&lt;-About Me-&gt;</h2>
-    <section class="grid1">
-        <div class="window">
-            <div class="header">about_me.exe<button class="dot"></button></div>
-            <div class="about_me">
-                <p>C:\TPPage&gt; about_me.exe</p><br>
-                <p><strong>[IDENTITY]</strong></p>
-                <p>User: TGLabsOfficial [Tiago]</p>
-                <p>Profession: Student</p>
-                <p>Location: Italy</p>
-                <p>OS: Arch Linux</p><br>
-                <p><strong>[BIO]</strong></p>
-                <p>I create scripts/apps/sites for fun and educational purposes, I love the golden age of computing.</p><br>
-                <p><strong>[STATUS]</strong></p>
-                <p>Uploading new projects<span class="dots"></span></p>
-                <p>Looking for collaborators: TRUE</p>
-            </div>
+    <h2 class="section-title" id="about">&lt;- About Me -&gt;</h2>
+
+<section class="grid1">
+    <div class="window">
+        <div class="header">
+            about_me.exe
+            <button class="dot" aria-label="Close window"></button>
         </div>
-    </section>
+
+        <div class="about_me">
+            <p>C:\TPPage&gt; about_me.exe</p>
+
+            <p><strong>[IDENTITY]</strong></p>
+            <p>User: TGLabsOfficial [Tiago]</p>
+            <p>Occupation: Student</p>
+            <p>Location: Italy</p>
+            <p>OS: Arch Linux</p>
+
+            <p><strong>[BIO]</strong></p>
+            <p>
+                I enjoy working on small coding projects in my spare time,
+                both for fun and to learn new things.
+            </p>
+            <p>
+                I’m also fascinated by the history of computing.
+            </p>
+
+            <p><strong>[STATUS]</strong></p>
+            <p>Working on new projects<span class="dots"></span></p>
+            <p>Looking for collaborators: YES</p>
+        </div>
+    </div>
+</section>
+
 
     <!-- CONTACTS SECTION -->
     <h2 class="section-title margin-top" id="contact">&lt;-Contacts-&gt;</h2>
     <section class="grid1">
         <div class="window">
-            <div class="header">Contacts<button class="dot"></button></div>
+            <div class="header">Contacts<button class="dot" aria-label="Close window"></button></div>
             <br>
             <div class="content_text">Mail: <span id="email-container">Loading...</span></div>
             <br>
-            <a href="https://www.github.com/tppage/tppage.github.io" target="_blank" rel="noopener" class="button">[SOURCE CODE]</a>
-            <a href="https://www.github.com/TGLabsOfficial" target="_blank" rel="noopener" class="button">[GITHUB]</a>
-            <a href="https://www.instagram.com/tiago_kronyte_?" target="_blank" rel="noopener" class="button">[INSTAGRAM]</a>
+            <div>
+                <a href="https://www.github.com/tppage/tppage.github.io" target="_blank" rel="noopener" class="button">[SOURCE CODE]</a>
+                <a href="https://www.github.com/TGLabsOfficial" target="_blank" rel="noopener" class="button">[GITHUB]</a>
+                <a href="https://www.instagram.com/tiago_kronyte_?" target="_blank" rel="noopener" class="button">[INSTAGRAM]</a>
+            </div>
             <br>
         </div>
     </section>
@@ -209,7 +226,7 @@
     <h2 class="section-title" id="comments">&lt;-Comments-&gt;</h2>
     <section class="grid1">
         <div class="window">
-            <div class="header">comments.log<button class="dot"></button></div>
+            <div class="header">comments.log<button class="dot" aria-label="Close window"></button></div>
             <br>
             <div id="listaCommenti" class="content_text">
                 <p>Loading comments<span class="dots"></span></p>
@@ -225,7 +242,7 @@
     <!-- VISITOR COUNTER WIDGET -->
     <div class="grid1">
         <div class="window">
-            <div class="header">visitor_count.txt<button class="dot"></button></div>
+            <div class="header">visitor_count.txt<button class="dot" aria-label="Close window"></button></div>
             <div class="counter">Visitor_count: <span id="view-count">Loading<span class="dots"></span></span></div>
         </div>
     </div> 
