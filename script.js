@@ -202,16 +202,16 @@ const CommentsManager = {
             data.reverse().forEach(([dateIso, author = "anon", text]) => {
                 if (!text) return;
 
-                const formattedDate = new Date(dateIso).toLocaleString('it-IT', {
+                const formattedDate = new Date(dateIso).toLocaleString('en-US', {
                     day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
                 });
         
                 const div = document.createElement('div');
-                div.className = 'comment-item';
+                div.className = 'comments-item';
                 div.innerHTML = `
-                    <span class="comment-date">[${formattedDate}]</span> 
-                    <strong class="comment-author">${author}</strong>: 
-                    <span class="comment-text">${text}</span>
+                    <span class="comments-date">[${formattedDate}]</span> 
+                    <strong class="comments-author">${author}</strong>: 
+                    <span class="comments-text">${text}</span>
                 `;
                 container.appendChild(div);
             });
@@ -283,7 +283,7 @@ async function updateViewCounter() {
         ["view-count", "view-count-tb"].forEach(id => {
             const element = document.getElementById(id);
             if (element) {
-                element.textContent = Number(count).toLocaleString("it-IT");
+                element.textContent = Number(count).toLocaleString("en-US");
             }
         });
     } catch (error) {
@@ -296,12 +296,25 @@ async function updateViewCounter() {
 // ==========================================
 
 /**
+ * Assembles and injects obfuscated email link into target container to prevent scraping.
+ */
+function initEmailObfuscation() {
+    const user = 'tiagosprojectspage';
+    const domain = 'gmail.com';
+    const container = document.getElementById('email-container');
+
+    if (container) {
+        container.innerHTML = `<a href="mailto:${user}@${domain}" class="link">${user}@${domain}</a>`;
+    }
+}
+
+/**
  * Synchronizes real-time status bar clock widget.
  */
 function updateClock() {
     const clock = document.getElementById('clock');
     if (clock) {
-        clock.innerText = new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+        clock.innerText = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
     }
 }
 
@@ -370,6 +383,7 @@ async function typeWriterEffect() {
 
 document.addEventListener('DOMContentLoaded', () => {
     typeWriterEffect();
+    initEmailObfuscation();
     CommentsManager.load();
     setInterval(() => CommentsManager.load(), 30000);
     makeWindowsDraggable();
