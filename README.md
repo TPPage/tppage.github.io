@@ -1,36 +1,55 @@
-# 🖥️ TPPage — Windows 95 Style Website
+# TPPage 🖥️
 
-A personal website featuring a **Windows 95** desktop interface, complete with a retro boot screen, draggable windows, live comment system, visitor counter, andStart Menu navigation.
+A retro Windows 95-styled personal portfolio and project showcase website built with HTML, CSS, JavaScript, and Firebase.
 
-👉 **Live Site:** [tppage.github.io](https://tppage.github.io)  
-🐙 **GitHub Repo:** [github.com/tppage/tppage.github.io](https://www.github.com/tppage/tppage.github.io)
+![License](https://img.shields.io/github/license/TPPage/tppage.github.io?color=blue)
+![Stars](https://img.shields.io/github/stars/TPPage/tppage.github.io)
 
----
+## 🌐 Live Demo
 
-## 📌 Projects Included
-
-- **`trioxide.exe`**: Fake Win32 virus with OpenGL shaders.
-- **`italy.exe`**: Win32/DOS C++ program generating ASCII art of Italy.
-- **`ibm_pc_case`**: IBM PC-inspired ATX case (3D `.stl` model + gallery).
----
-
-## ✨ Key Features
-
-- **🕹️ Retro UI:** Custom Windows 95 theme, CRT scanline effect, and retro fonts (*Press Start 2P*, *VT323*)[cite: 3].
-- **🪟 Draggable Windows:** Interactive modals and sidebars[cite: 2].
-- **💬 Live Comments:** Serverless backend using Google Apps Script[cite: 2].
-- **📊 Visitor Counter:** Real-time visits powered by Cloudflare Workers & GoatCounter[cite: 1, 2].
-- **⚡ Vanilla Tech:** Pure HTML5, CSS3, and ES6+ JavaScript (no frameworks)[cite: 1, 2, 3].
-- **⌨️ Keyboard Shortcuts:** `F1` for Help, `ESC` to close windows[cite: 1, 2].
+Visit the site live here: [tppage.github.io](https://tppage.github.io)
 
 ---
 
-## 📁 Repository Structure
+## 📌 About The Project
 
-```text
-tppage.github.io/
-├── index.html            # Core layout & modal windows
-├── script.js             # Drag logic, APIs, time & events
-├── style.css             # CRT overlay, retro typography & themes
-├── icons/                # Bitmap icons
-└── projects/             # Downloads (.zip, .cpp, .stl, images)
+TPPage is my personal portfolio website where I host and share my programming projects, hardware experiments, and downloads. The site features a full retro desktop interface inspired by classic operating systems like Windows 95/98.
+
+### ✨ Key Features
+
+- **Project Showcase**: Detailed modals for programs, 3D models, and source downloads.
+- **Retro Interface**: Interactive Start Menu, window management, and taskbar navigation.
+- **Real-Time Live Chat**: Built-in guestbook and chat powered by Cloud Firestore.
+- **Role System**: User login system with permissions (Guest, User, Admin).
+- **Responsive Layout**: Designed to work on all screens, down to mobile viewports (<363px).
+
+---
+
+## 🛠️ Tech Stack
+
+* **Frontend**: HTML5, CSS3, Vanilla JavaScript (ES6+)
+* **Backend & Database**: Firebase Cloud Firestore & Anonymous Auth
+* **Analytics**: Privacy-focused visitor counter (GoatCounter)
+* **Hosting**: GitHub Pages
+
+---
+
+## 📂 Featured Projects
+
+- **trioxide.exe**: Fake Win32 demo application using custom shaders.
+- **italy.exe**: Win32/DOS C++ program generating ASCII art of Italy.
+- **IBM PC Case**: 3D-printable ATX case model styled like a classic IBM PC.
+
+---
+
+## 👤 Author
+
+**Tiago (TGLabsOfficial)**
+- GitHub: [@TGLabsOfficial](https://github.com/TGLabsOfficial)
+- Instagram: [@tiago_kronyte_](https://www.instagram.com/tiago_kronyte_/)
+
+---
+
+## 📄 License
+
+Distributed under the [MIT License](LICENSE).
