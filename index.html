@@ -32,24 +32,28 @@
          ========================================== -->
     <nav class="start-menu" id="start-menu" aria-label="Start Menu" aria-hidden="true">
         <div class="sidebar-menu">
-            <span class="win-banner-text"><b>Windows</b>95</span>
+            <span class="win-banner-text"><b>TPPage</b></span>
         </div>
         <div class="content">
             <a href="#" id="open-explorer">
                 <img src="icons/explorer.png" alt="Explorer" class="menu-icon">
-                <span><u>E</u>xplorer.exe</span>
+                <span><u>E</u>xplorer</span>
             </a>
             <a href="#about" onclick="toggleStartMenu()">
                 <img src="icons/about.png" alt="About icon" class="menu-icon">
                 <span><u>A</u>bout Me</span>
             </a>
-            <a href="#projects" onclick="toggleStartMenu()">
+            <a href="#projects-title" onclick="toggleStartMenu()">
                 <img src="icons/projects.png" alt="Projects icon" class="menu-icon">
                 <span><u>P</u>rojects</span>
             </a>
             <a href="#comments" onclick="toggleStartMenu()">
                 <img src="icons/comments.png" alt="Comments icon" class="menu-icon">
                 <span><u>C</u>omments</span>
+            </a>
+            <a href="javascript:void(0)" onclick="openProject('modal-user', 'tb-badge-user'); toggleStartMenu();">
+                <img src="icons/user.png" alt="User icon" class="menu-icon">
+                <span><u>U</u>ser</span>
             </a>
             <hr>
             <a href="javascript:void(0)" onclick="toggleHelpPanel(); toggleStartMenu();">
@@ -62,16 +66,16 @@
     <!-- EXPLORER SIDEBAR -->
     <aside class="sidebar" id="explorer" role="navigation" aria-label="Sidebar">
         <div class="header">
-            <span>explorer.exe</span>
+            <span>Explorer</span>
             <button class="dot" onclick="toggleExplorer()" aria-label="Close sidebar"></button>
         </div>
         <div class="content_text">
             <br>
             <div><a href="#title" class="link">C:\TPPage&gt;</a></div>
-            <div><span>├──</span><a href="#projects" class="link">projects</a></div>
-            <div><span>├──</span><a href="#about" class="link">about_me.exe</a></div>
-            <div><span>├──</span><a href="#contact" class="link">contacts</a></div>
-            <div><span>└──</span><a href="#comments" class="link">comments.log</a></div>
+            <div><span>├──</span><a href="#projects-title" class="link">Projects</a></div>
+            <div><span>├──</span><a href="#about" class="link">About Me</a></div>
+            <div><span>├──</span><a href="#contact" class="link">Contacts</a></div>
+            <div><span>└──</span><a href="#comments" class="link">Comments</a></div>
             <br>
         </div>
     </aside>
@@ -82,32 +86,32 @@
     <h1 class="ascii-title" id="title">TPPage</h1>
 
     <!-- PROJECTS SECTION -->
-    <h2 class="section-title" id="projects">&lt;-Projects-&gt;</h2>
-    <section class="grid">
+    <h2 class="section-title" id="projects-title">&lt;-Projects-&gt;</h2>
+    <section class="grid" id="projects">
         <div class="window">
             <div class="header">trioxide.exe<button class="dot" onclick="openProject('project1-modal')"></button></div>
             <div class="content_title">trioxide.exe</div>
-            <div class="content_text">fake win32 virus</div>
+            <div class="content_text">Fake Win32 virus</div>
             <a href="javascript:void(0)" class="button" onclick="openProject('project1-modal')">[VIEW MORE]</a>
         </div>
 
         <div class="window">
             <div class="header">italy.exe<button class="dot" onclick="openProject('project2-modal')"></button></div>
             <div class="content_title">italy.exe</div>
-            <div class="content_text">win32/dos program</div>
+            <div class="content_text">Win32/DOS program</div>
             <a href="javascript:void(0)" class="button" onclick="openProject('project2-modal')">[VIEW MORE]</a>
         </div>
 
         <div class="window">
-            <div class="header">ibm_pc_case<button class="dot" onclick="openProject('project3-modal')"></button></div>
-            <div class="content_title">IBM PC case</div>
+            <div class="header">IBM PC Case<button class="dot" onclick="openProject('project3-modal')"></button></div>
+            <div class="content_title">IBM PC Case </div>
             <div class="content_text">ATX case that looks like an IBM PC</div>
             <a href="javascript:void(0)" class="button" onclick="openProject('project3-modal')">[VIEW MORE]</a>
         </div>
 
         <div class="window">
-            <div class="header">work_in_progress<button class="dot" onclick="openProject('project4-modal')"></button></div>
-            <div class="content_title">work_in_progress</div>
+            <div class="header">Work in Progress<button class="dot" onclick="openProject('project4-modal')"></button></div>
+            <div class="content_title">Work in Progress</div>
             <div class="content_text">C:\TPPage&gt; echo Work in progress...</div>
             <a href="javascript:void(0)" class="button" onclick="openProject('project4-modal')">[VIEW MORE]</a>
         </div>
@@ -118,13 +122,8 @@
 
 <section class="grid1">
     <div class="window">
-        <div class="header">
-            about_me.exe
-            <button class="dot" aria-label="Close window"></button>
-        </div>
-
+        <div class="header">About Me<button class="dot" aria-label="Close window"></button></div>
         <div class="about_me">
-            <p>C:\TPPage&gt; about_me.exe</p>
 
             <p><strong>[IDENTITY]</strong></p>
             <p>User: TGLabsOfficial [Tiago]</p>
@@ -133,17 +132,14 @@
             <p>OS: Arch Linux</p>
 
             <p><strong>[BIO]</strong></p>
-            <p>
-                I enjoy working on small coding projects in my spare time,
-                both for fun and to learn new things.
-            </p>
-            <p>
-                I’m also fascinated by the history of computing.
-            </p>
+            <p>I’m a student and a hobbyist programmer. I enjoy learning about programming, computer science, and technology in general. 
+               I enjoy working on small coding projects in my spare time, both for fun and to learn new things.</p>
+            <p>I’m also fascinated by the history of computing.</p>
 
             <p><strong>[STATUS]</strong></p>
-            <p>Working on new projects<span class="dots"></span></p>
+            <p>Working on new projects</p>
             <p>Looking for collaborators: YES</p>
+
         </div>
     </div>
 </section>
@@ -188,13 +184,13 @@
         <div class="modal-body">
             <h3>[ PROJECT: italy.exe ]</h3>
             <p>&gt; STATUS: Out of maintenance</p>
-            <p>&gt; DESCRIPTION: win32/dos program that creates an ASCII art of Italy</p>
-            <p>&gt; DOWNLOAD: <a href="projects/italy/italyWin32.exe" download class="link">win32italy.exe</a> | <a href="projects/italy/italyWin32.cpp" download class="link">Win32Source(C++)</a> | <a href="projects/italy/italyDos16.exe" download class="link">italyDos16.exe</a> | <a href="projects/italy/italyDos16.cpp" download class="link">DosSource(C++)</a></p>
+            <p>&gt; DESCRIPTION: Win32/DOS program that creates an ASCII art of Italy</p>
+            <p>&gt; DOWNLOAD: <a href="projects/italy/italyWin32.exe" download class="link">italyWin32.exe</a> | <a href="projects/italy/italyDos16.exe" download class="link">italyDos16.exe</a> | <a href="projects/italy/italyDos16.cpp" download class="link">italyDos16.cpp (C++)</a></p>
         </div>
     </div>
 
     <div id="project3-modal" class="window modal-window" aria-hidden="true">
-        <div class="header">ibm_pc_case<button class="dot" onclick="closeAllModals()"></button></div>
+        <div class="header">IBM PC Case<button class="dot" onclick="closeAllModals()"></button></div>
         <div class="modal-body">
             <h3>[ PROJECT: IBM PC case ]</h3>
             <p>&gt; STATUS: Finished</p>
@@ -212,7 +208,7 @@
     </div>
 
     <div id="project4-modal" class="window modal-window" aria-hidden="true">
-        <div class="header">work_in_progress<button class="dot" onclick="closeAllModals()"></button></div>
+        <div class="header">Work in Progress<button class="dot" onclick="closeAllModals()"></button></div>
         <div class="modal-body">
             <h3>[ PROJECT: Unknown ]</h3>
             <p>&gt; STATUS: Work in progress<span class="dots"></span></p>
@@ -226,7 +222,7 @@
     <h2 class="section-title" id="comments">&lt;-Comments-&gt;</h2>
     <section class="grid1">
         <div class="window">
-            <div class="header">comments.log<button class="dot" aria-label="Close window"></button></div>
+            <div class="header">Comments<button class="dot" aria-label="Close window"></button></div>
             <br>
             <div id="listaCommenti" class="content_text">
                 <p>Loading comments<span class="dots"></span></p>
@@ -242,8 +238,8 @@
     <!-- VISITOR COUNTER WIDGET -->
     <div class="grid1">
         <div class="window">
-            <div class="header">visitor_count.txt<button class="dot" aria-label="Close window"></button></div>
-            <div class="counter">Visitor_count: <span id="view-count">Loading<span class="dots"></span></span></div>
+            <div class="header">Visitor Count<button class="dot" aria-label="Close window"></button></div>
+            <div class="counter">Visits: <span id="view-count">Loading<span class="dots"></span></span></div>
         </div>
     </div> 
 
@@ -266,22 +262,37 @@
             </div>
             <div class="taskbar-item" id="tb-badge-projects" onclick="openProject('modal-projects', 'tb-badge-projects')">
                 <img src="icons/projects.png" alt="Projects icon" class="tb-icon">
-                <span>Projects: <strong id="project-count">4</strong></span>
+                <span>Projects: <strong id="project-count">0</strong></span>
             </div>
         </div>
         <div id="clock">00:00</div>
     </div>
 
-    <!-- USER INFO MODAL -->
+    <!-- USER INFORMATION MODAL -->
     <div id="modal-user" class="window modal-window" aria-hidden="true">
-        <div class="header">
-            <span>User Information</span>
-            <button class="dot" onclick="closeAllModals()"></button>
-        </div>
+    <div class="header">
+        <span>User Authentication</span>
+        <button class="dot" onclick="closeAllModals()"></button>
+    </div>
         <div class="modal-body">
-            <p><strong>Logged User:</strong> <span id="modal-user-name">guest_000</span></p>
-            <p><strong>Session ID:</strong> active_session_95</p>
-            <p><strong>System Status:</strong> OK (Windows 95 Environment)</p>
+        <p><strong>Current Nickname:</strong> <span id="modal-user-name">Guest</span></p>
+        
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px; margin-bottom: 12px;">
+            <input 
+                type="text" 
+                id="username-input" 
+                class="input" 
+                placeholder="Nickname..." 
+            >
+            <input 
+                type="password" 
+                id="password-input" 
+                class="input" 
+                placeholder="Password / PIN..." 
+            >
+            <button onclick="updateUsername()" class="button" style="margin: 4px 0 0 0;">[SAVE / LOGIN]</button>
+        </div>
+        <p style="font-size: 11px; opacity: 0.8;">New nicknames will be registered with the entered password.</p>
         </div>
     </div>
 
@@ -292,7 +303,7 @@
             <button class="dot" onclick="closeAllModals()"></button>
         </div>
         <div class="modal-body">
-            <p><strong>Total Projects:</strong> <span id="modal-total-projects">4</span></p>
+            <p><strong>Total Projects:</strong> <span id="modal-total-projects">0</span></p>
             <hr>
             <p>Browse the site or use the Start Menu to open individual projects in detail.</p>
         </div>

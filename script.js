@@ -9,20 +9,28 @@
 // ==========================================
 
 /**
- * Unique identifier for anonymous sessions.
- * @type {string}
+ * Retrieves the stored username from local storage or generates a default guest ID.
+ * @returns {string} The active username.
  */
-const GUEST_NAME = `guest_${Math.floor(Math.random() * 899 + 100)}`;
+function getInitialUsername() {
+    return localStorage.getItem('tppage_username') || `guest_${Math.floor(Math.random() * 899 + 100)}`;
+}
 
 /**
- * Global counter tracking highest window z-index layer.
+ * Current user identifier used for active session and comment submissions.
+ * @type {string}
+ */
+let CURRENT_USER = getInitialUsername();
+
+/**
+ * Global counter tracking the highest window z-index layer.
  * @type {number}
  */
 let highestZIndex = 4001;
 
 /**
  * Cache for primary structural UI elements to minimize DOM lookups.
- * @type {Object.<string, Function>}
+ * @type {Object.<string, function(): HTMLElement|null>}
  */
 const DOM = {
     overlay: () => document.getElementById('overlay'),
@@ -31,21 +39,106 @@ const DOM = {
     explorer: () => document.getElementById('explorer')
 };
 
+/**
+ * Retrieves stored user database object mapping usernames to passwords.
+ * @returns {Object.<string, string>} Hashmap of user credentials.
+ */
+function getUserCredentialsDB() {
+    try {
+        return JSON.parse(localStorage.getItem('tppage_user_db') || '{}');
+    } catch {
+        return {};
+    }
+}
+
+/**
+ * Updates the current username in persistent storage with password authentication.
+ * @param {string} newUsername - The new nickname selected by the user.
+ * @param {string} password - The authentication key/password for the nickname.
+ * @returns {boolean} True if username update was successful, false otherwise.
+ */
+function setUsername(newUsername, password) {
+    const cleanName = newUsername.trim();
+    const cleanPass = password.trim();
+
+    if (!cleanName) {
+        showToast('[ERROR] Username cannot be empty');
+        return false;
+    }
+
+    if (!cleanPass) {
+        showToast('[ERROR] Password required to claim nickname');
+        return false;
+    }
+
+    const db = getUserCredentialsDB();
+
+    // Check if the username is already registered in local database
+    if (db[cleanName]) {
+        if (db[cleanName] !== cleanPass) {
+            showToast('[ERROR] Invalid password for this nickname!');
+            return false;
+        }
+    } else {
+        // Register new nickname with given password
+        db[cleanName] = cleanPass;
+        localStorage.setItem('tppage_user_db', JSON.stringify(db));
+        showToast('[INFO] New nickname registered with password');
+    }
+
+    CURRENT_USER = cleanName;
+    localStorage.setItem('tppage_username', CURRENT_USER);
+
+    // Synchronize DOM UI elements
+    ['display-user-id', 'modal-user-name'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = CURRENT_USER;
+    });
+
+    const userInput = /** @type {HTMLInputElement|null} */ (document.getElementById('username-input'));
+    if (userInput) userInput.value = CURRENT_USER;
+
+    const passInput = /** @type {HTMLInputElement|null} */ (document.getElementById('password-input'));
+    if (passInput) passInput.value = '';
+
+    showToast(`[INFO] Authenticated as: ${CURRENT_USER}`);
+    return true;
+}
+
+/**
+ * Handler function invoked via input triggers or buttons to save profile credentials.
+ * @returns {void}
+ */
+function updateUsername() {
+    const userInput = /** @type {HTMLInputElement|null} */ (document.getElementById('username-input'));
+    const passInput = /** @type {HTMLInputElement|null} */ (document.getElementById('password-input'));
+
+    const username = userInput?.value || '';
+    const password = passInput?.value || '';
+
+    const success = setUsername(username, password);
+    if (success) {
+        closeAllModals();
+    }
+}
+
 // ==========================================
 // 2. WINDOW & Z-INDEX MANAGEMENT
 // ==========================================
 
 /**
- * Promotes a specified window/dialog element to top z-index layer.
+ * Promotes a specified window/dialog element to the top z-index layer.
  * @param {HTMLElement|null} element - Target element to focus.
+ * @returns {void}
  */
 function bringToFront(element) {
     if (!element) return;
-    element.style.zIndex = ++highestZIndex;
+    element.style.zIndex = String(++highestZIndex);
 }
 
 /**
- * Toggles visibility state of Explorer sidebar panel.
+ * Toggles visibility state of the Explorer sidebar panel.
+ * @returns {void}
  */
 function toggleExplorer() {
     const win = DOM.explorer();
@@ -58,6 +151,7 @@ function toggleExplorer() {
  * Displays modal dialog and activates related taskbar indicators.
  * @param {string} modalId - ID of target modal dialog element.
  * @param {string|null} [badgeId=null] - Optional taskbar element ID to trigger active status.
+ * @returns {void}
  */
 function openProject(modalId, badgeId = null) {
     const modal = document.getElementById(modalId);
@@ -73,23 +167,25 @@ function openProject(modalId, badgeId = null) {
         const badge = badgeId ? document.getElementById(badgeId) : document.querySelector(`[onclick*="${modalId}"].taskbar-item`);
         badge?.classList.add('active');
 
-        modal.querySelector('.dot')?.focus();
+        /** @type {HTMLElement|null} */ (modal.querySelector('.dot'))?.focus();
     }
 }
 
 /**
  * Dismisses all modal dialog windows and resets taskbar states.
+ * @returns {void}
  */
 function closeAllModals() {
     DOM.overlay()?.classList.remove('modal-active');
     
     document.querySelectorAll('.modal-window.modal-active').forEach(modal => {
-        modal.classList.remove('modal-active');
-        modal.setAttribute('aria-hidden', 'true');
+        const htmlModal = /** @type {HTMLElement} */ (modal);
+        htmlModal.classList.remove('modal-active');
+        htmlModal.setAttribute('aria-hidden', 'true');
         // Reset manual position styles applied during dragging
-        modal.style.left = '';
-        modal.style.top = '';
-        modal.style.transform = '';
+        htmlModal.style.left = '';
+        htmlModal.style.top = '';
+        htmlModal.style.transform = '';
     });
 
     document.querySelectorAll('.taskbar-item.active').forEach(badge => badge.classList.remove('active'));
@@ -97,6 +193,7 @@ function closeAllModals() {
 
 /**
  * Toggles system help overlay panel visibility.
+ * @returns {void}
  */
 function toggleHelpPanel() {
     const help = DOM.helpPanel();
@@ -108,6 +205,7 @@ function toggleHelpPanel() {
 
 /**
  * Toggles retro Start Menu expansion state.
+ * @returns {void}
  */
 function toggleStartMenu() {
     const menu = DOM.startMenu();
@@ -125,9 +223,11 @@ function toggleStartMenu() {
 
 /**
  * Registers drag handlers on headers for movable window containers.
+ * @returns {void}
  */
 function makeWindowsDraggable() {
-    document.querySelectorAll('.modal-window, #help-panel, .sidebar').forEach(win => {
+    document.querySelectorAll('.modal-window, #help-panel, .sidebar').forEach(winElement => {
+        const win = /** @type {HTMLElement} */ (winElement);
         const header = win.querySelector('.header');
         if (!header) return;
 
@@ -140,14 +240,15 @@ function makeWindowsDraggable() {
         win.addEventListener('mousedown', () => bringToFront(win));
 
         header.addEventListener('mousedown', (e) => {
-            if (e.target.classList.contains('dot')) return;
+            const mouseEv = /** @type {MouseEvent} */ (e);
+            if ((/** @type {HTMLElement} */ (mouseEv.target)).classList.contains('dot')) return;
 
             isDragging = true;
             win.classList.add('draggable-window');
 
             const rect = win.getBoundingClientRect();
-            startX = e.clientX;
-            startY = e.clientY;
+            startX = mouseEv.clientX;
+            startY = mouseEv.clientY;
             initialLeft = rect.left;
             initialTop = rect.top;
 
@@ -155,12 +256,19 @@ function makeWindowsDraggable() {
             win.style.left = `${initialLeft}px`;
             win.style.top = `${initialTop}px`;
 
+            /**
+             * Handles window movement during mouse dragging.
+             * @param {MouseEvent} ev - Mouse move event.
+             */
             const onMouseMove = (ev) => {
                 if (!isDragging) return;
                 win.style.left = `${initialLeft + (ev.clientX - startX)}px`;
                 win.style.top = `${initialTop + (ev.clientY - startY)}px`;
             };
 
+            /**
+             * Cleans up mouse drag listeners upon releasing click.
+             */
             const onMouseUp = () => {
                 isDragging = false;
                 document.removeEventListener('mousemove', onMouseMove);
@@ -179,15 +287,21 @@ function makeWindowsDraggable() {
 
 /**
  * Controller service managing backend integration for comments.
- * @namespace
+ * @typedef {Object} CommentsManager
+ * @property {string} apiUrl - Endpoint URL for the backend App Script service.
+ * @property {function(): Promise<void>} load - Fetches and renders existing comments.
+ * @property {function(): Promise<void>} send - Submits a new comment payload.
  */
+
+/** @type {CommentsManager} */
 const CommentsManager = {
     /** @type {string} */
     apiUrl: "https://script.google.com/macros/s/AKfycbzAr3vWOsFtXcAjdicrC3x2TttgHEqYxAq8R730g2wuOpmBd7D7rFWv4i78c8z6L5SO/exec",
 
     /**
-     * Fetches stored comments from remote service and injects markup.
+     * Fetches stored comments from remote service and injects markup into DOM.
      * @async
+     * @returns {Promise<void>}
      */
     async load() {
         const container = document.getElementById('listaCommenti');
@@ -195,6 +309,7 @@ const CommentsManager = {
 
         try {
             const res = await fetch(this.apiUrl);
+            /** @type {Array<[string, string, string]>} */
             const data = await res.json();
             
             container.innerHTML = ""; 
@@ -221,12 +336,13 @@ const CommentsManager = {
     },
 
     /**
-     * Submits current comment input payload to backend service.
+     * Submits current comment input payload to backend service using current user nickname.
      * @async
+     * @returns {Promise<void>}
      */
     async send() {
-        const input = document.getElementById('commento');
-        const sendBtn = document.getElementById('send-btn');
+        const input = /** @type {HTMLInputElement|null} */ (document.getElementById('commento'));
+        const sendBtn = /** @type {HTMLButtonElement|null} */ (document.getElementById('send-btn'));
         const text = input?.value.trim();
 
         if (!text || !sendBtn) return;
@@ -237,7 +353,7 @@ const CommentsManager = {
       
         const formData = new FormData();
         formData.append("testo", text); 
-        formData.append("autore", GUEST_NAME); 
+        formData.append("autore", CURRENT_USER); 
       
         try {
             await fetch(this.apiUrl, { method: "POST", mode: "no-cors", body: formData });
@@ -265,8 +381,9 @@ const CommentsManager = {
 // ==========================================
 
 /**
- * Polls proxy endpoint to update page view elements.
+ * Polls proxy endpoint to update page view counter elements.
  * @async
+ * @returns {Promise<void>}
  */
 async function updateViewCounter() {
     const proxyUrl = "https://goatcounter.tiagosprojectspage.workers.dev/api/visits";
@@ -296,7 +413,8 @@ async function updateViewCounter() {
 // ==========================================
 
 /**
- * Assembles and injects obfuscated email link into target container to prevent scraping.
+ * Assembles and injects obfuscated email link into target container to prevent web scraping.
+ * @returns {void}
  */
 function initEmailObfuscation() {
     const user = 'tiagosprojectspage';
@@ -310,6 +428,7 @@ function initEmailObfuscation() {
 
 /**
  * Synchronizes real-time status bar clock widget.
+ * @returns {void}
  */
 function updateClock() {
     const clock = document.getElementById('clock');
@@ -319,9 +438,10 @@ function updateClock() {
 }
 
 /**
- * Triggers transient notification banner overlay.
+ * Triggers a transient notification banner overlay.
  * @param {string} message - Content string for toast popup.
  * @param {number} [duration=3000] - Lifespan in milliseconds.
+ * @returns {void}
  */
 function showToast(message, duration = 3000) {
     const toast = document.createElement('div');
@@ -340,21 +460,28 @@ function showToast(message, duration = 3000) {
 // ==========================================
 
 /**
- * Renders loading screen boot process sequence.
+ * Renders loading screen boot process sequence using animated typewriter effect.
  * @async
+ * @returns {Promise<void>}
  */
 async function typeWriterEffect() {
     const loadingScreen = document.getElementById('loading-screen');
     const lines = document.querySelectorAll('.loading-content p');
-    const loadingBar = document.querySelector('.loading-bar');
-    const loadingProgress = document.querySelector('.loading-progress');
+    const loadingBar = /** @type {HTMLElement|null} */ (document.querySelector('.loading-bar'));
+    const loadingProgress = /** @type {HTMLElement|null} */ (document.querySelector('.loading-progress'));
     const loadingPercent = document.getElementById('loading-percent');
 
+    /**
+     * Pauses execution for a specified duration.
+     * @param {number} ms - Delay in milliseconds.
+     * @returns {Promise<void>}
+     */
     const delay = ms => new Promise(r => setTimeout(r, ms));
 
     for (const line of lines) {
-        if (line.classList.contains('loading-bar') || line.id === 'loading-percent') continue;
-        line.style.opacity = '1';
+        const htmlLine = /** @type {HTMLElement} */ (line);
+        if (htmlLine.classList.contains('loading-bar') || htmlLine.id === 'loading-percent') continue;
+        htmlLine.style.opacity = '1';
         await delay(300);
     }
 
@@ -388,17 +515,30 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(() => CommentsManager.load(), 30000);
     makeWindowsDraggable();
 
+    // Synchronize UI elements with current username state
     ['display-user-id', 'modal-user-name'].forEach(id => {
         const el = document.getElementById(id);
-        if (el) el.innerText = GUEST_NAME;
+        if (el) el.innerText = CURRENT_USER;
     });
 
-    const projectCount = document.querySelectorAll('#projects .window').length;
+    const userInput = /** @type {HTMLInputElement|null} */ (document.getElementById('username-input'));
+    if (userInput) userInput.value = CURRENT_USER;
+
+    const projectCount = document.querySelectorAll('section#projects .window').length;
     ['project-count', 'modal-total-projects'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.innerText = String(projectCount);
     });
 
+    // Enter listeners for login modal inputs
+    document.getElementById('username-input')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') updateUsername();
+    });
+    document.getElementById('password-input')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') updateUsername();
+    });
+
+    // Enter listener for posting comments
     document.getElementById('commento')?.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') CommentsManager.send();
     });
@@ -418,7 +558,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // System Keyboard Shortcuts
 document.addEventListener('keydown', (e) => {
     if (e.key === "Escape") {
-        DOM.startMenu()?.classList.remove('active');
+        const menu = DOM.startMenu();
+        if (menu?.classList.contains('active')) {
+            menu.classList.remove('active');
+            menu.setAttribute('aria-hidden', 'true');
+            document.getElementById('start-btn')?.setAttribute('aria-expanded', 'false');
+        }
         DOM.helpPanel()?.classList.remove('show');
         DOM.explorer()?.classList.remove('active');
         closeAllModals();
@@ -433,13 +578,18 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('click', (e) => {
     const menu = DOM.startMenu();
     const btn = document.getElementById('start-btn');
-    if (menu?.classList.contains('active') && !menu.contains(e.target) && !btn?.contains(e.target)) {
+    const clickTarget = /** @type {Node} */ (e.target);
+    
+    // Close Start menu if user clicks outside
+    if (menu?.classList.contains('active') && !menu.contains(clickTarget) && !btn?.contains(clickTarget)) {
         menu.classList.remove('active');
+        menu.setAttribute('aria-hidden', 'true');
+        btn?.setAttribute('aria-expanded', 'false');
     }
 
     const explorer = DOM.explorer();
     const openBtn = document.getElementById('open-explorer');
-    if (explorer?.classList.contains('active') && !explorer.contains(e.target) && !openBtn?.contains(e.target)) {
+    if (explorer?.classList.contains('active') && !explorer.contains(clickTarget) && !openBtn?.contains(clickTarget)) {
         explorer.classList.remove('active');
     }
 });
