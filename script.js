@@ -1,12 +1,20 @@
 /**
  * ==============================================================================
- * TPPage Core Logic - Windows 95 Style Interface
+ * TPPage Core Logic - Retro Operating System & Window Management
  * ==============================================================================
  */
 
 // ==========================================
-// 1. CONFIGURATION & GLOBAL STATE
+// 1. GLOBAL CONFIGURATION & STATE
 // ==========================================
+
+const ROLES = {
+    GUEST: 0,
+    USER: 1,
+    MODERATOR: 2,
+    ADMIN: 3,
+    OWNER: 4
+};
 
 /**
  * Retrieves the stored username from local storage or generates a default guest ID.
@@ -16,21 +24,11 @@ function getInitialUsername() {
     return localStorage.getItem('tppage_username') || `guest_${Math.floor(Math.random() * 899 + 100)}`;
 }
 
-/**
- * Current user identifier used for active session and comment submissions.
- * @type {string}
- */
 let CURRENT_USER = getInitialUsername();
-
-/**
- * Global counter tracking the highest window z-index layer.
- * @type {number}
- */
 let highestZIndex = 4001;
 
 /**
  * Cache for primary structural UI elements to minimize DOM lookups.
- * @type {Object.<string, function(): HTMLElement|null>}
  */
 const DOM = {
     overlay: () => document.getElementById('overlay'),
@@ -39,26 +37,46 @@ const DOM = {
     explorer: () => document.getElementById('explorer')
 };
 
+// ==========================================
+// 2. USER AUTHENTICATION & PERMISSIONS
+// ==========================================
+
 /**
- * Retrieves stored user database object mapping usernames to passwords.
- * @returns {Object.<string, string>} Hashmap of user credentials.
+ * Retrieves current active user profile information and role level.
+ * @returns {{ username: string, role: string, level: number }}
  */
-function getUserCredentialsDB() {
-    try {
-        return JSON.parse(localStorage.getItem('tppage_user_db') || '{}');
-    } catch {
-        return {};
+function getCurrentUserProfile() {
+    if (CURRENT_USER === 'TGLabsOfficial') {
+        return { username: CURRENT_USER, role: 'owner', level: ROLES.OWNER };
     }
+
+    if (CURRENT_USER.startsWith('guest_')) {
+        return { username: CURRENT_USER, role: 'guest', level: ROLES.GUEST };
+    }
+
+    return { username: CURRENT_USER, role: 'user', level: ROLES.USER };
 }
 
 /**
- * Updates the current username in persistent storage with password authentication.
- * @param {string} newUsername - The new nickname selected by the user.
- * @param {string} password - The authentication key/password for the nickname.
- * @returns {boolean} True if username update was successful, false otherwise.
+ * Checks if the active user meets a required permission level.
+ * @param {number} requiredLevel - Minimum required level from ROLES enum
+ * @returns {boolean}
  */
-function setUsername(newUsername, password) {
+function hasPermission(requiredLevel) {
+    return getCurrentUserProfile().level >= requiredLevel;
+}
+
+/**
+ * Authenticates or registers a user with credentials stored in Cloud Firestore.
+ * @async
+ * @param {string} newUsername 
+ * @param {string} email 
+ * @param {string} password 
+ * @returns {Promise<boolean>}
+ */
+async function setUsername(newUsername, email, password) {
     const cleanName = newUsername.trim();
+    const cleanEmail = email.trim();
     const cleanPass = password.trim();
 
     if (!cleanName) {
@@ -66,70 +84,110 @@ function setUsername(newUsername, password) {
         return false;
     }
 
-    if (!cleanPass) {
-        showToast('[ERROR] Password required to claim nickname');
+    if (cleanName.toLowerCase().startsWith('guest_') && cleanName !== CURRENT_USER) {
+        showToast('[ERROR] "guest_" prefix is reserved for guests');
         return false;
     }
 
-    const db = getUserCredentialsDB();
-
-    // Check if the username is already registered in local database
-    if (db[cleanName]) {
-        if (db[cleanName] !== cleanPass) {
-            showToast('[ERROR] Invalid password for this nickname! [The nickname might be in use]');
-            return false;
-        }
-    } else {
-        // Register new nickname with given password
-        db[cleanName] = cleanPass;
-        localStorage.setItem('tppage_user_db', JSON.stringify(db));
-        showToast('[INFO] New nickname registered with password');
+    if (!cleanPass) {
+        showToast('[ERROR] Password required');
+        return false;
     }
 
-    CURRENT_USER = cleanName;
-    localStorage.setItem('tppage_username', CURRENT_USER);
+    if (!window.db || !window.fbFS) {
+        showToast('[ERROR] Database offline');
+        return false;
+    }
 
-    // Synchronize DOM UI elements
-    ['display-user-id', 'modal-user-name'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = CURRENT_USER;
-    });
+    const { doc, getDoc, setDoc } = window.fbFS;
+    const userRef = doc(window.db, 'users', cleanName);
 
-    const userInput = /** @type {HTMLInputElement|null} */ (document.getElementById('username-input'));
-    if (userInput) userInput.value = CURRENT_USER;
+    try {
+        const userSnap = await getDoc(userRef);
 
-    const passInput = /** @type {HTMLInputElement|null} */ (document.getElementById('password-input'));
-    if (passInput) passInput.value = '';
+        if (userSnap.exists()) {
+            // Existing user verification
+            const userData = userSnap.data();
+            if (userData.password !== cleanPass) {
+                showToast('[ERROR] Invalid password!');
+                return false;
+            }
 
-    showToast(`[INFO] Authenticated as: ${CURRENT_USER}`);
-    return true;
+            // Optional email update upon re-login
+            if (cleanEmail && cleanEmail !== userData.email) {
+                await setDoc(userRef, { email: cleanEmail }, { merge: true });
+            }
+
+            showToast(`[INFO] Welcome back, ${cleanName}!`);
+        } else {
+            // New user registration
+            const role = (cleanName === 'TGLabsOfficial') ? 'owner' : 'user';
+
+            await setDoc(userRef, {
+                username: cleanName,
+                email: cleanEmail || null,
+                password: cleanPass,
+                role: role,
+                createdAt: new Date()
+            });
+
+            showToast('[INFO] Account created successfully!');
+        }
+
+        CURRENT_USER = cleanName;
+        localStorage.setItem('tppage_username', CURRENT_USER);
+
+        // Update UI elements
+        ['display-user-id', 'modal-user-name'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerText = CURRENT_USER;
+        });
+
+        const userInput = document.getElementById('username-input');
+        if (userInput) userInput.value = CURRENT_USER;
+
+        const passInput = document.getElementById('password-input');
+        if (passInput) passInput.value = '';
+
+        return true;
+
+    } catch (err) {
+        console.error("Firestore Auth Error:", err);
+        showToast('[ERROR] Could not save user data');
+        return false;
+    }
 }
 
 /**
- * Handler function invoked via input triggers or buttons to save profile credentials.
- * @returns {void}
+ * Event handler triggered by save button or enter key in authentication modal.
+ * @async
  */
-function updateUsername() {
-    const userInput = /** @type {HTMLInputElement|null} */ (document.getElementById('username-input'));
-    const passInput = /** @type {HTMLInputElement|null} */ (document.getElementById('password-input'));
+async function updateUsername() {
+    const userInput = document.getElementById('username-input');
+    const emailInput = document.getElementById('email-input');
+    const passInput = document.getElementById('password-input');
+    const btn = document.getElementById('auth-save-btn');
 
     const username = userInput?.value || '';
+    const email = emailInput?.value || '';
     const password = passInput?.value || '';
 
-    const success = setUsername(username, password);
+    if (btn) btn.disabled = true;
+    const success = await setUsername(username, email, password);
+    if (btn) btn.disabled = false;
+
     if (success) {
         closeAllModals();
     }
 }
 
 // ==========================================
-// 2. WINDOW & Z-INDEX MANAGEMENT
+// 3. WINDOW & Z-INDEX MANAGEMENT
 // ==========================================
 
 /**
  * Promotes a specified window/dialog element to the top z-index layer.
- * @param {HTMLElement|null} element - Target element to focus.
- * @returns {void}
+ * @param {HTMLElement|null} element
  */
 function bringToFront(element) {
     if (!element) return;
@@ -138,7 +196,6 @@ function bringToFront(element) {
 
 /**
  * Toggles visibility state of the Explorer sidebar panel.
- * @returns {void}
  */
 function toggleExplorer() {
     const win = DOM.explorer();
@@ -149,51 +206,50 @@ function toggleExplorer() {
 
 /**
  * Displays modal dialog and activates related taskbar indicators.
- * @param {string} modalId - ID of target modal dialog element.
- * @param {string|null} [badgeId=null] - Optional taskbar element ID to trigger active status.
- * @returns {void}
+ * @param {string} modalId
+ * @param {string|null} [badgeId=null]
  */
 function openProject(modalId, badgeId = null) {
     const modal = document.getElementById(modalId);
     const overlay = DOM.overlay();
     
-    if (overlay) overlay.classList.add('modal-active');
+    if (overlay) overlay.classList.add('active', 'modal-active');
     
     if (modal) {
-        modal.classList.add('modal-active');
+        modal.classList.add('active', 'modal-active');
         modal.setAttribute('aria-hidden', 'false');
         bringToFront(modal);
         
         const badge = badgeId ? document.getElementById(badgeId) : document.querySelector(`[onclick*="${modalId}"].taskbar-item`);
-        badge?.classList.add('active');
+        badge?.classList.add('active', 'active-app');
 
-        /** @type {HTMLElement|null} */ (modal.querySelector('.dot'))?.focus();
+        modal.querySelector('.dot')?.focus();
     }
 }
 
 /**
  * Dismisses all modal dialog windows and resets taskbar states.
- * @returns {void}
  */
 function closeAllModals() {
-    DOM.overlay()?.classList.remove('modal-active');
+    const overlay = DOM.overlay();
+    if (overlay) overlay.classList.remove('active', 'modal-active');
     
-    document.querySelectorAll('.modal-window.modal-active').forEach(modal => {
-        const htmlModal = /** @type {HTMLElement} */ (modal);
-        htmlModal.classList.remove('modal-active');
-        htmlModal.setAttribute('aria-hidden', 'true');
+    document.querySelectorAll('.modal-window').forEach(modal => {
+        modal.classList.remove('active', 'modal-active');
+        modal.setAttribute('aria-hidden', 'true');
         // Reset manual position styles applied during dragging
-        htmlModal.style.left = '';
-        htmlModal.style.top = '';
-        htmlModal.style.transform = '';
+        modal.style.left = '';
+        modal.style.top = '';
+        modal.style.transform = '';
     });
 
-    document.querySelectorAll('.taskbar-item.active').forEach(badge => badge.classList.remove('active'));
+    document.querySelectorAll('.taskbar-item').forEach(badge => {
+        badge.classList.remove('active', 'active-app');
+    });
 }
 
 /**
  * Toggles system help overlay panel visibility.
- * @returns {void}
  */
 function toggleHelpPanel() {
     const help = DOM.helpPanel();
@@ -205,7 +261,6 @@ function toggleHelpPanel() {
 
 /**
  * Toggles retro Start Menu expansion state.
- * @returns {void}
  */
 function toggleStartMenu() {
     const menu = DOM.startMenu();
@@ -218,16 +273,15 @@ function toggleStartMenu() {
 }
 
 // ==========================================
-// 3. DRAGGABLE WINDOW SYSTEM
+// 4. DRAGGABLE WINDOW SYSTEM
 // ==========================================
 
 /**
  * Registers drag handlers on headers for movable window containers.
- * @returns {void}
  */
 function makeWindowsDraggable() {
     document.querySelectorAll('.modal-window, #help-panel, .sidebar').forEach(winElement => {
-        const win = /** @type {HTMLElement} */ (winElement);
+        const win = winElement;
         const header = win.querySelector('.header');
         if (!header) return;
 
@@ -240,15 +294,14 @@ function makeWindowsDraggable() {
         win.addEventListener('mousedown', () => bringToFront(win));
 
         header.addEventListener('mousedown', (e) => {
-            const mouseEv = /** @type {MouseEvent} */ (e);
-            if ((/** @type {HTMLElement} */ (mouseEv.target)).classList.contains('dot')) return;
+            if (e.target.classList.contains('dot')) return;
 
             isDragging = true;
             win.classList.add('draggable-window');
 
             const rect = win.getBoundingClientRect();
-            startX = mouseEv.clientX;
-            startY = mouseEv.clientY;
+            startX = e.clientX;
+            startY = e.clientY;
             initialLeft = rect.left;
             initialTop = rect.top;
 
@@ -256,19 +309,12 @@ function makeWindowsDraggable() {
             win.style.left = `${initialLeft}px`;
             win.style.top = `${initialTop}px`;
 
-            /**
-             * Handles window movement during mouse dragging.
-             * @param {MouseEvent} ev - Mouse move event.
-             */
             const onMouseMove = (ev) => {
                 if (!isDragging) return;
                 win.style.left = `${initialLeft + (ev.clientX - startX)}px`;
                 win.style.top = `${initialTop + (ev.clientY - startY)}px`;
             };
 
-            /**
-             * Cleans up mouse drag listeners upon releasing click.
-             */
             const onMouseUp = () => {
                 isDragging = false;
                 document.removeEventListener('mousemove', onMouseMove);
@@ -282,16 +328,12 @@ function makeWindowsDraggable() {
 }
 
 // ==========================================
-// 4. COMMENTS SYSTEM (FIREBASE REALTIME BACKEND)
+// 5. COMMENTS MANAGER (FIRESTORE)
 // ==========================================
 
-/**
- * Controller service managing backend integration for comments using Cloud Firestore.
- */
 const CommentsManager = {
     /**
      * Initializes the real-time listener once Firebase is loaded globally.
-     * @returns {void}
      */
     init() {
         const checkFB = setInterval(() => {
@@ -304,21 +346,19 @@ const CommentsManager = {
 
     /**
      * Subscribes to Cloud Firestore collection updates in real time.
-     * @returns {void}
      */
     listenForComments() {
         const container = document.getElementById('listaCommenti');
-        if (!container) return;
+        if (!container || !window.db || !window.fbFS) return;
 
         const { collection, query, orderBy, limit, onSnapshot } = window.fbFS;
-        const commentsRef = collection(window.db, 'comments');
-        const q = query(commentsRef, orderBy('timestamp', 'desc'), limit(50));
+        const q = query(collection(window.db, 'comments'), orderBy('timestamp', 'desc'), limit(25));
 
         onSnapshot(q, (snapshot) => {
             container.innerHTML = "";
 
             if (snapshot.empty) {
-                container.innerHTML = "<p>No comments yet. Be the first!</p>";
+                container.innerHTML = "<p>No comments yet. Be the first to leave a message!</p>";
                 return;
             }
 
@@ -331,38 +371,41 @@ const CommentsManager = {
 
                 const author = data.author || "anon";
                 const text = data.text || "";
+                const role = (data.role || (data.isGuest ? 'guest' : 'user')).toUpperCase();
 
                 const div = document.createElement('div');
                 div.className = 'comments-item';
                 div.innerHTML = `
                     <span class="comments-date">[${formattedDate}]</span> 
+                    <span class="role-badge badge-${role.toLowerCase()}">[${role}]</span>
                     <strong class="comments-author">${author}</strong>: 
                     <span class="comments-text">${text}</span>
                 `;
                 container.appendChild(div);
             });
-        }, (error) => {
-            console.error("Firestore listener error:", error);
-            container.innerHTML = "<p>[ERROR] Failed to load comments</p>";
+        }, (err) => {
+            console.error("Firestore comments listener error:", err);
+            container.innerHTML = "<p>[ERROR] Loading comments failed.</p>";
         });
     },
 
     /**
      * Submits current comment input payload to Cloud Firestore.
      * @async
-     * @returns {Promise<void>}
      */
     async send() {
-        const input = /** @type {HTMLInputElement|null} */ (document.getElementById('commento'));
-        const sendBtn = /** @type {HTMLButtonElement|null} */ (document.getElementById('send-btn'));
+        const input = document.getElementById('commento');
+        const sendBtn = document.getElementById('send-btn');
         const text = input?.value.trim();
 
         if (!text || !sendBtn) return;
 
         if (!window.db || !window.fbFS) {
-            showToast('[ERROR] Firebase not connected');
+            showToast('[ERROR] Database offline');
             return;
         }
+
+        const userProfile = getCurrentUserProfile();
 
         sendBtn.disabled = true;
         const originalText = sendBtn.innerText;
@@ -372,12 +415,14 @@ const CommentsManager = {
             const { collection, addDoc } = window.fbFS;
             await addDoc(collection(window.db, 'comments'), {
                 text: text,
-                author: CURRENT_USER,
+                author: userProfile.username,
+                role: userProfile.role,
+                isGuest: userProfile.level === ROLES.GUEST,
                 timestamp: new Date()
             });
 
             input.value = "";
-            showToast('[INFO] Comment posted successfully');
+            showToast('[INFO] Comment published!');
             sendBtn.innerText = "[OK]";
             setTimeout(() => {
                 sendBtn.innerText = originalText;
@@ -385,7 +430,7 @@ const CommentsManager = {
             }, 1000);
         } catch (err) {
             console.error("Failed to post comment:", err);
-            showToast('[ERROR] Could not send message');
+            showToast('[ERROR] Could not send comment');
             sendBtn.innerText = "[ERROR]";
             setTimeout(() => {
                 sendBtn.innerText = originalText;
@@ -396,13 +441,12 @@ const CommentsManager = {
 };
 
 // ==========================================
-// 5. VISITOR COUNTER SERVICE - GOATCOUNTER
+// 6. VISITOR COUNTER SERVICE - GOATCOUNTER
 // ==========================================
 
 /**
  * Polls proxy endpoint to update page view counter elements.
  * @async
- * @returns {Promise<void>}
  */
 async function updateViewCounter() {
     const proxyUrl = "https://goatcounter.tiagosprojectspage.workers.dev/api/visits";
@@ -428,12 +472,11 @@ async function updateViewCounter() {
 }
 
 // ==========================================
-// 6. UTILITY UX & NOTIFICATIONS
+// 7. UTILITY UX & NOTIFICATIONS
 // ==========================================
 
 /**
- * Assembles and injects obfuscated email link into target container to prevent web scraping.
- * @returns {void}
+ * Assembles and injects obfuscated email link into target container.
  */
 function initEmailObfuscation() {
     const user = 'tiagosprojectspage';
@@ -447,7 +490,6 @@ function initEmailObfuscation() {
 
 /**
  * Synchronizes real-time status bar clock widget.
- * @returns {void}
  */
 function updateClock() {
     const clock = document.getElementById('clock');
@@ -457,50 +499,46 @@ function updateClock() {
 }
 
 /**
- * Triggers a transient notification banner overlay.
- * @param {string} message - Content string for toast popup.
- * @param {number} [duration=3000] - Lifespan in milliseconds.
- * @returns {void}
+ * Displays retro toast notification banner overlay.
+ * @param {string} msg 
+ * @param {number} [duration=3000] 
  */
-function showToast(message, duration = 3000) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.innerText = message;
-    document.body.appendChild(toast);
-    
+function showToast(msg, duration = 3000) {
+    let toast = document.getElementById('retro-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'retro-toast';
+        toast.className = 'retro-toast toast';
+        document.body.appendChild(toast);
+    }
+    toast.innerText = msg;
+    toast.classList.add('show');
+
     setTimeout(() => {
-        toast.classList.add('hide');
-        setTimeout(() => toast.remove(), 300);
+        toast.classList.remove('show');
     }, duration);
 }
 
 // ==========================================
-// 7. RETRO BOOT SEQUENCE
+// 8. RETRO BOOT SEQUENCE
 // ==========================================
 
 /**
  * Renders loading screen boot process sequence using animated typewriter effect.
  * @async
- * @returns {Promise<void>}
  */
 async function typeWriterEffect() {
     const loadingScreen = document.getElementById('loading-screen');
     const lines = document.querySelectorAll('.loading-content p');
-    const loadingBar = /** @type {HTMLElement|null} */ (document.querySelector('.loading-bar'));
-    const loadingProgress = /** @type {HTMLElement|null} */ (document.querySelector('.loading-progress'));
+    const loadingBar = document.querySelector('.loading-bar');
+    const loadingProgress = document.querySelector('.loading-progress');
     const loadingPercent = document.getElementById('loading-percent');
 
-    /**
-     * Pauses execution for a specified duration.
-     * @param {number} ms - Delay in milliseconds.
-     * @returns {Promise<void>}
-     */
     const delay = ms => new Promise(r => setTimeout(r, ms));
 
     for (const line of lines) {
-        const htmlLine = /** @type {HTMLElement} */ (line);
-        if (htmlLine.classList.contains('loading-bar') || htmlLine.id === 'loading-percent') continue;
-        htmlLine.style.opacity = '1';
+        if (line.classList.contains('loading-bar') || line.id === 'loading-percent') continue;
+        line.style.opacity = '1';
         await delay(300);
     }
 
@@ -524,7 +562,7 @@ async function typeWriterEffect() {
 }
 
 // ==========================================
-// 8. INITIALIZATION & EVENT HANDLERS
+// 9. INITIALIZATION & EVENT HANDLERS
 // ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -539,8 +577,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (el) el.innerText = CURRENT_USER;
     });
 
-    const userInput = /** @type {HTMLInputElement|null} */ (document.getElementById('username-input'));
-    if (userInput) userInput.value = CURRENT_USER;
+    const userInput = document.getElementById('username-input');
+    if (userInput) userInput.value = CURRENT_USER.startsWith('guest_') ? '' : CURRENT_USER;
 
     const projectCount = document.querySelectorAll('section#projects .window').length;
     ['project-count', 'modal-total-projects'].forEach(id => {
@@ -548,15 +586,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (el) el.innerText = String(projectCount);
     });
 
-    // Enter listeners for login modal inputs
-    document.getElementById('username-input')?.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') updateUsername();
-    });
-    document.getElementById('password-input')?.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') updateUsername();
+    // Enter key listeners for authentication inputs
+    ['username-input', 'email-input', 'password-input'].forEach(id => {
+        document.getElementById(id)?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') updateUsername();
+        });
     });
 
-    // Enter listener for posting comments
+    // Enter key listener for comments
     document.getElementById('commento')?.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') CommentsManager.send();
     });
@@ -573,7 +610,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2000);
 });
 
-// System Keyboard Shortcuts
+// Global Keyboard Shortcuts
 document.addEventListener('keydown', (e) => {
     if (e.key === "Escape") {
         const menu = DOM.startMenu();
@@ -582,7 +619,7 @@ document.addEventListener('keydown', (e) => {
             menu.setAttribute('aria-hidden', 'true');
             document.getElementById('start-btn')?.setAttribute('aria-expanded', 'false');
         }
-        DOM.helpPanel()?.classList.remove('show');
+        DOM.helpPanel()?.classList.remove('active', 'show');
         DOM.explorer()?.classList.remove('active');
         closeAllModals();
     }
@@ -596,15 +633,16 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('click', (e) => {
     const menu = DOM.startMenu();
     const btn = document.getElementById('start-btn');
-    const clickTarget = /** @type {Node} */ (e.target);
+    const clickTarget = e.target;
     
-    // Close Start menu if user clicks outside
+    // Close Start Menu if clicking outside
     if (menu?.classList.contains('active') && !menu.contains(clickTarget) && !btn?.contains(clickTarget)) {
         menu.classList.remove('active');
         menu.setAttribute('aria-hidden', 'true');
         btn?.setAttribute('aria-expanded', 'false');
     }
 
+    // Close Explorer sidebar if clicking outside
     const explorer = DOM.explorer();
     const openBtn = document.getElementById('open-explorer');
     if (explorer?.classList.contains('active') && !explorer.contains(clickTarget) && !openBtn?.contains(clickTarget)) {

@@ -55,10 +55,14 @@
                 <img src="icons/user.png" alt="User icon" class="menu-icon">
                 <span><u>U</u>ser</span>
             </a>
-            <hr>
-            <a href="javascript:void(0)" onclick="toggleHelpPanel(); toggleStartMenu();">
+            <a href="javascript:void(0)" onclick="openProject('help-panel'); toggleStartMenu();">
                 <img src="icons/help.png" alt="Help icon" class="menu-icon">
                 <span><u>H</u>elp (F1)</span>
+            </a>
+            <hr>
+            <a href="javascript:void(0)" onclick="openProject('modal-privacy', 'tb-badge-privacy'); toggleStartMenu();">
+                <img src="icons/privacy.png" alt="Privacy icon" class="menu-icon">
+                <span><u>P</u>rivacy Policy</span>
             </a>
         </div>
     </nav>
@@ -284,14 +288,20 @@
                     placeholder="Nickname..." 
                 >
                 <input 
+                    type="email" 
+                    id="email-input" 
+                    class="input comments_log retro-input content_text" 
+                    placeholder="Email (optional)..." 
+                >
+                <input 
                     type="password" 
                     id="password-input" 
                     class="input comments_log retro-input content_text" 
                     placeholder="Password / PIN..." 
                 >
-                <button onclick="updateUsername()" class="button save-btn">[SAVE / LOGIN]</button>
+                <button onclick="updateUsername()" class="button save-btn" id="auth-save-btn">[SAVE / LOGIN]</button>
             </div>
-            <p class="auth-note">New nicknames will be registered with the entered password.</p>
+            <p class="auth-note">Provide an email if you wish to receive update notifications.</p>
         </div>
     </div>
 
@@ -308,22 +318,52 @@
         </div>
     </div>
 
-    <!-- SYSTEM HELP PANEL -->
-    <div id="help-panel" aria-hidden="true">
-        <div class="header">Help - Press ESC to close<button class="dot" onclick="toggleHelpPanel()"></button></div>
+    <!-- PRIVACY POLICY MODAL -->
+    <div id="modal-privacy" class="window modal-window" aria-hidden="true">
+        <div class="header">
+            <span>Privacy Policy</span>
+            <button class="dot" onclick="closeAllModals()"></button>
+        </div>
         <div class="modal-body">
-            <p><strong>KEYBOARD SHORTCUTS:</strong></p>
-            <p>F1 - Show this help</p>
-            <p>ESC - Close windows &amp; sidebar</p>
-            <p>TAB - Navigate elements</p>
+            <h3>[ PRIVACY POLICY ]</h3>
+            <p><strong>1. Analytics:</strong> This site uses GoatCounter for anonymous visitor counts. It does not use tracking cookies or collect personal data.</p>
+            <p><strong>2. User Accounts & Comments:</strong> Username, optional email, password, and comments are stored securely via Firebase Cloud Firestore to enable site functionality.</p>
+            <p><strong>3. Local Storage:</strong> LocalStorage is used strictly for functional purposes (saving your active session nickname).</p>
+            <hr>
+            <a href="javascript:void(0)" class="button" onclick="closeAllModals()">[OK]</a>
+        </div>
+    </div>
+
+    <!-- SYSTEM HELP MODAL -->
+    <div id="help-panel" class="window modal-window" aria-hidden="true">
+        <div class="header">
+            <span>System Help</span>
+            <button class="dot" onclick="closeAllModals()"></button>
+        </div>
+        <div class="modal-body">
+            <h3>[ HELP & KEYBOARD SHORTCUTS ]</h3>
+            <p><strong>F1:</strong> Show system help</p>
+            <p><strong>ESC:</strong> Close active windows &amp; sidebars</p>
+            <p><strong>TAB:</strong> Navigate interactive elements</p>
         </div>
     </div>
 
     <!-- FIREBASE SDKs (v10 Modular) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            onSnapshot, 
+            query, 
+            orderBy, 
+            limit,
+            doc,
+            getDoc,
+            setDoc
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA5Oh4moV-ZMryYp_hXHv3hhz8M3XPdUpE",
@@ -332,12 +372,12 @@
             storageBucket: "tppage-github.firebasestorage.app",
             messagingSenderId: "166943312724",
             appId: "1:166943312724:web:f0dc01cd7843b3c61496c1"
-    };
+        };
 
         const app = initializeApp(firebaseConfig);
         window.db = getFirestore(app);
         window.auth = getAuth(app);
-        window.fbFS = { collection, addDoc, onSnapshot, query, orderBy, limit };
+        window.fbFS = { collection, addDoc, onSnapshot, query, orderBy, limit, doc, getDoc, setDoc };
 
         signInAnonymously(window.auth).catch(err => console.error("Auth error:", err));
     </script>
