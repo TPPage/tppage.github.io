@@ -1,6 +1,6 @@
 # TPPage 🖥️
 
-A retro Windows 95-styled personal portfolio and project showcase website built with HTML, CSS, JavaScript, and Firebase.
+A retro Windows 9x-styled personal portfolio and project showcase website built with HTML, CSS, JavaScript, and Firebase.
 
 ## 🌐 Live Demo
 
